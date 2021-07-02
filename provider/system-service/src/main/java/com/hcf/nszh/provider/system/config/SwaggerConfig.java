@@ -1,5 +1,7 @@
 package com.hcf.nszh.provider.system.config;
 
+import com.hcf.nszh.common.config.BaseSwaggerConfig;
+import com.hcf.nszh.common.enums.SwaggerEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @Author huangxiong
+ * @author maruko
  * @Date 2019/6/13 0013
  **/
 @SpringBootConfiguration
@@ -20,21 +22,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
     @Value("#{'prod'.equals('${spring.profiles.active}')}")
     private boolean disableSwagger;
+
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(!disableSwagger)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.hcf.nszh.provider.system.controller"))
-                .paths(PathSelectors.any())
-                .build();
+        return BaseSwaggerConfig.createRestApi(disableSwagger, SwaggerEnum.SYSTEM_PROVIDER_CONTROLLER_PATH, SwaggerEnum.SYSTEM_PROVIDER_CONTROLLER_NAME);
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("系统服务模块接口API")
-                .description("©2021 Copyright. Powered By Maruko")
-                .build();
-    }
 }

@@ -4,10 +4,10 @@ package com.hcf.nszh.common.algorithm;
 import java.util.Arrays;
 
 /**
- * @author hx
+ * @author maruko
  */
 public class Base58Algorithm {
-    public static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+    private static final char[] ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
     private static final char ENCODED_ZERO = ALPHABET[0];
     private static final int[] INDEXES = new int[128];
 
@@ -33,8 +33,7 @@ public class Base58Algorithm {
         while (zeros < input.length && input[zeros] == 0) {
             ++zeros;
         }
-        // Convert base-256 digits to base-58 digits (plus conversion to ASCII
-        // characters)
+
         input = Arrays.copyOf(input, input.length);
 
         char[] encoded = new char[input.length * 2];
@@ -42,18 +41,17 @@ public class Base58Algorithm {
         for (int inputStart = zeros; inputStart < input.length; ) {
             encoded[--outputStart] = ALPHABET[divmod(input, inputStart, 256, 58)];
             if (input[inputStart] == 0) {
-                ++inputStart; // optimization - skip leading zeros
+                ++inputStart;
             }
         }
-        // Preserve exactly as many leading encoded zeros in output as there
-        // were leading zeros in input.
+
         while (outputStart < encoded.length && encoded[outputStart] == ENCODED_ZERO) {
             ++outputStart;
         }
         while (--zeros >= 0) {
             encoded[--outputStart] = ENCODED_ZERO;
         }
-        // Return encoded string (including encoded leading zeros).
+
         return new String(encoded, outputStart, encoded.length - outputStart);
     }
 
@@ -68,8 +66,7 @@ public class Base58Algorithm {
         if (input.length() == 0) {
             return new byte[0];
         }
-        // Convert the base58-encoded ASCII chars to a base58 byte sequence
-        // (base58 digits).
+
         byte[] input58 = new byte[input.length()];
         for (int i = 0; i < input.length(); ++i) {
             char c = input.charAt(i);
@@ -90,7 +87,7 @@ public class Base58Algorithm {
         for (int inputStart = zeros; inputStart < input58.length; ) {
             decoded[--outputStart] = divmod(input58, inputStart, 58, 256);
             if (input58[inputStart] == 0) {
-                ++inputStart; // optimization - skip leading zeros
+                ++inputStart;
             }
         }
         // Ignore extra leading zeroes that were added during the calculation.
@@ -103,7 +100,6 @@ public class Base58Algorithm {
 
     private static byte divmod(byte[] number, int firstDigit, int base, int divisor) {
         // this is just long division which accounts for the base of the input
-        // digits
         int remainder = 0;
         for (int i = firstDigit; i < number.length; i++) {
             int digit = (int) number[i] & 0xFF;

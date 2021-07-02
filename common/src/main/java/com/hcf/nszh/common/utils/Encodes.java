@@ -1,6 +1,3 @@
-/**
- * Copyright (c) 2005-2012 springside.org.cn
- */
 package com.hcf.nszh.common.utils;
 
 import org.apache.commons.codec.DecoderException;
@@ -13,7 +10,7 @@ import org.apache.commons.text.StringEscapeUtils;
  * 2.自制的base62 编码
  * 3.Commons-Lang的xml/html escape
  * 4.JDK提供的URLEncoder
- * @author calvin
+ * @author maruko
  * @version 2013-01-15
  */
 public class Encodes {

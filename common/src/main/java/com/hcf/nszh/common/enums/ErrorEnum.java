@@ -3,7 +3,7 @@ package com.hcf.nszh.common.enums;
 import com.hcf.nszh.common.exception.BusinessException;
 
 /**
- * @author hx
+ * @author maruko
  */
 
 public enum ErrorEnum {

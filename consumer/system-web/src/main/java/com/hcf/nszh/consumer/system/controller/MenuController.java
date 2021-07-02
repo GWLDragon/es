@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author  Furant
+ * @author maruko
  * 2019/7/5 0:34
  */
 @Api(value = "API - MenuController", description = "菜单管理")
@@ -63,6 +63,7 @@ public class MenuController {
         return menuVoResponseVo;
 
     }
+
     @ApiOperation("修改菜单排序")
     @RequestLogging
     @RequestMapping(value = "/updateSort", method = RequestMethod.POST)
@@ -82,7 +83,7 @@ public class MenuController {
     @RequestLogging
     @GetMapping(value = "/getMenuByName")
     public ResponseVo<List<MenuVo>> getMenuByName(@ApiParam(value = "名称", required = true) @RequestParam(value = "name") String name,
-                                            @ApiParam(value = "上级菜单", required = true) @RequestParam(value = "parentId") String parentId) {
-        return  menuApiService.getMenuByName(name,parentId);
+                                                  @ApiParam(value = "上级菜单", required = true) @RequestParam(value = "parentId") String parentId) {
+        return menuApiService.getMenuByName(name, parentId);
     }
 }

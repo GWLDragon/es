@@ -6,7 +6,7 @@ import com.hcf.nszh.common.enums.ErrorEnum;
 import java.io.Serializable;
 
 /**
- * @author Administrator on 2018/7/5 0005.
+ * @author maruko on 2018/7/5 0005.
  */
 public class ResponseVo<T> implements Serializable {
 

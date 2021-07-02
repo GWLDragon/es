@@ -6,12 +6,12 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/7/1
  **/
 @SupTreeList
 @Data
-public abstract class TreeEntity<T> implements Serializable {
+public abstract class AbstractTreeEntity<T> implements Serializable {
     /**
      * 父级编号
      */

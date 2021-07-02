@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * @author  Administrator on 2018/8/13 0013.
+ * @author maruko on 2018/8/13 0013.
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
@@ -14,11 +14,11 @@ public class SpringContextUtils implements ApplicationContextAware {
     /**
      * 上下文对象实例
      */
-    private static ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if(this.applicationContext == null) {
+        if (this.applicationContext == null) {
             this.applicationContext = applicationContext;
         }
     }
@@ -28,7 +28,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      *
      * @return
      */
-    public static ApplicationContext getApplicationContext() {
+    public ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 
@@ -38,7 +38,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param name
      * @return
      */
-    public static Object getBean(String name) {
+    public Object getBean(String name) {
         return getApplicationContext().getBean(name);
     }
 
@@ -49,7 +49,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static <T> T getBean(Class<T> clazz) {
+    public <T> T getBean(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);
     }
 
@@ -61,7 +61,7 @@ public class SpringContextUtils implements ApplicationContextAware {
      * @param <T>
      * @return
      */
-    public static <T> T getBean(String name, Class<T> clazz) {
+    public <T> T getBean(String name, Class<T> clazz) {
         return getApplicationContext().getBean(name, clazz);
     }
 }

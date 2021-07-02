@@ -1,6 +1,7 @@
 package com.hcf.nszh.provider.mz.config;
 
 import com.alibaba.fastjson.JSON;
+import com.hcf.nszh.common.enums.NumberEnum;
 import com.hcf.nszh.provider.mz.entity.TestEntity;
 import com.hcf.nszh.provider.mz.service.EsService;
 import lombok.extern.slf4j.Slf4j;
@@ -8,14 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -28,27 +27,21 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +51,7 @@ import java.util.UUID;
  * 〈一句话功能简述〉<br>
  * 〈〉
  *
- * @author gwl
+ * @author maruko
  * @date 2021/6/28 11:18
  * @since 1.0.0
  */
@@ -126,9 +119,9 @@ public class ElasticSearchUtils {
             return false;
         }
         //1.创建索引请求
-        org.elasticsearch.client.indices.CreateIndexRequest my_index = new CreateIndexRequest(index);
+        org.elasticsearch.client.indices.CreateIndexRequest myIndex = new CreateIndexRequest(index);
         //2.执行客户端请求
-        restHighLevelClient.indices().create(my_index, RequestOptions.DEFAULT);
+        restHighLevelClient.indices().create(myIndex, RequestOptions.DEFAULT);
         return true;
     }
 
@@ -180,7 +173,7 @@ public class ElasticSearchUtils {
     }
 
     public void testDataList(String index) throws IOException {
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < NumberEnum.SIX; i++) {
             List<TestEntity> testEntities = esService.queryTest(i, 5000);
             for (TestEntity testEntity : testEntities) {
                 addData(testEntity, index);
@@ -398,12 +391,10 @@ public class ElasticSearchUtils {
         highlight.preTags("<span style='color:red'>");
         highlight.postTags("</span>");
         query.highlighter(highlight);
-        //不返回源数据。只有条数之类的数据。
-        //builder.fetchSource(false);
         request.source(query);
         SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         log.info("totalHits:" + response.getHits().getTotalHits());
-        if (response.status().getStatus() == 200) {
+        if (response.status().getStatus() == NumberEnum.TWO_HUNDRED) {
             // 解析对象
             return setSearchResponse(response, highlightField);
         }
@@ -415,7 +406,7 @@ public class ElasticSearchUtils {
      *
      * @throws IOException
      */
-    public void test() throws IOException {
+/*    public void test() throws IOException {
         //1、指定es集群  cluster.name 是固定的key值，my-application是ES集群的名称
         Settings settings = Settings.builder().put("cluster.name", "maruko").build();
         //2.创建访问ES服务器的客户端
@@ -446,7 +437,7 @@ public class ElasticSearchUtils {
         if (response.hasFailures()) {
             System.out.println("操作失败");
         }
-    }
+    }*/
 
 
     public void test2(List<Map<String, Object>> data) throws Exception {

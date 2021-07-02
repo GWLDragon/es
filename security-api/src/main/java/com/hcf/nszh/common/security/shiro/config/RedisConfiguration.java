@@ -1,6 +1,6 @@
 package com.hcf.nszh.common.security.shiro.config;
 
-import com.hcf.nszh.common.config.RedisConfigurationUtil;
+import com.hcf.nszh.common.config.BaseRedisConfig;
 import com.hcf.nszh.common.security.shiro.condition.FbsShiroCondition;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -29,14 +29,14 @@ public class RedisConfiguration {
     @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<String, Serializable> redisTemplate(
             RedisConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.redisTemplate(redisConnectionFactory);
+        return BaseRedisConfig.redisTemplate(redisConnectionFactory);
     }
 
     @Bean
     @ConditionalOnMissingBean(StringRedisTemplate.class)
     public StringRedisTemplate stringRedisTemplate(
             RedisConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.stringRedisTemplate(redisConnectionFactory);
+        return BaseRedisConfig.stringRedisTemplate(redisConnectionFactory);
     }
 
     /**
@@ -47,6 +47,6 @@ public class RedisConfiguration {
      */
     @Bean
     public RedisCacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.cacheManager(redisConnectionFactory);
+        return BaseRedisConfig.cacheManager(redisConnectionFactory);
     }
 }

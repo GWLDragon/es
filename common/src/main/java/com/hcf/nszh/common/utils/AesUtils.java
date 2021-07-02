@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * AES的加密和解密
  *
- * @author libo
+ * @author maruko
  */
 public class AesUtils {
 

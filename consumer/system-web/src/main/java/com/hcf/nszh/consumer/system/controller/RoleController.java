@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * @author  Furant
+ * @author maruko
  * 2019/7/3 22:53
  */
 @Api(value = "API - RoleController", description = "角色管理")
@@ -58,8 +58,8 @@ public class RoleController {
     @RequestMapping(value = "/listPageRoles", method = RequestMethod.GET)
     public ResponseVo<Page<RoleDetailVO>> listPageRoles(@RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
                                                         @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize,
-                                                        @RequestParam(required = false,  value = "search") String search) {
-        ResponseVo<Page<RoleDetailVO>> pageResponseVo = roleApiService.listPageRoles(pageNum, pageSize,search);
+                                                        @RequestParam(required = false, value = "search") String search) {
+        ResponseVo<Page<RoleDetailVO>> pageResponseVo = roleApiService.listPageRoles(pageNum, pageSize, search);
         return pageResponseVo;
     }
 
@@ -67,27 +67,27 @@ public class RoleController {
     @RequestLogging
     @RequestMapping(value = "/operatorRole", method = RequestMethod.POST)
     public ResponseVo<RoleDetailVO> operatorRole(@Valid @RequestBody OperatorRoleDto operatorRoleDto) {
-        ResponseVo<RoleDetailVO> roleDetailVOResponseVo = roleApiService.operatorRole(operatorRoleDto);
-        return roleDetailVOResponseVo;
+        ResponseVo<RoleDetailVO> responseVo = roleApiService.operatorRole(operatorRoleDto);
+        return responseVo;
     }
 
     @ApiOperation("编码查询,use")
     @RequestLogging
-    @GetMapping(value = "/getRoleByEnname")
-    public ResponseVo<RoleVo> getRoleByEnname(@ApiParam(value = "编码", required = true)
-                                              @RequestParam(value = "enname")
-                                                      String enname) {
+    @GetMapping(value = "/getRoleByEnName")
+    public ResponseVo<RoleVo> getRoleByEnName(@ApiParam(value = "编码", required = true)
+                                              @RequestParam(value = "enName")
+                                                      String enName) {
 
-        ResponseVo<RoleVo> roleByEname = roleApiService.getRoleByEnname(enname);
-        return roleByEname;
+        ResponseVo<RoleVo> roleByEnName = roleApiService.getRoleByEnname(enName);
+        return roleByEnName;
     }
 
     @ApiOperation("名称查询,use")
     @RequestLogging
     @GetMapping(value = "/getRoleByName")
     public ResponseVo<RoleVo> getRoleByName(@ApiParam(value = "名称", required = true)
-                                              @RequestParam(value = "name")
-                                                      String name) {
+                                            @RequestParam(value = "name")
+                                                    String name) {
         ResponseVo<RoleVo> roleByName = roleApiService.getRoleByName(name);
         return roleByName;
     }

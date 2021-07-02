@@ -1,7 +1,7 @@
 package com.hcf.nszh.common.constant;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/7/1
  **/
 public class SystemConstant {

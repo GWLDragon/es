@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 定义一个通知
  *
- * @author lc
+ * @author maruko
  * @Component: 被spring容器管理(此类在高并发应该加读写锁)
  * @Aspect: 声明一个切面(切点 + 通知)
  * @date 2019-01-03
@@ -34,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Slf4j
 public class RedisAspect {
+
+    public static final String JH = ".";
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -75,7 +77,7 @@ public class RedisAspect {
                 ResponseVo<?> resultDto = (ResponseVo<?>) returnValue;
                 if (ErrorEnum.SUCCESS.getErrorCode() != resultDto.getCode()) {
                     log.debug("在controller中出现异常，直接返回，不做缓存处理");
-                    return cacheValue;
+                    return null;
                 }
             }
 
@@ -107,7 +109,7 @@ public class RedisAspect {
         String cacheId = null;
         if (StringUtils.isNotBlank(cacheKey)) {
             // 有方法全路径的时候，从全路径中提起类名
-            if (cacheKey.contains(".")) {
+            if (cacheKey.contains(JH)) {
                 cacheId = cacheKey.substring(0, cacheKey.lastIndexOf("."));
             } else {
                 key = cacheKey;

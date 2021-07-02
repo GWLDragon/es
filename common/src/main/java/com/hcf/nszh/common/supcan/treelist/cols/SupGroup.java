@@ -1,13 +1,10 @@
-/**
- *  .
- */
 package com.hcf.nszh.common.supcan.treelist.cols;
 
 import java.lang.annotation.*;
 
 /**
  * 硕正Group注解
- * @author WangZhen
+ * @author maruko
  * @version 2013-11-12
  */
 @Target({ ElementType.ANNOTATION_TYPE })

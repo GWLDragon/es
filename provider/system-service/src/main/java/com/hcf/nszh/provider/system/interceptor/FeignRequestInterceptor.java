@@ -1,21 +1,18 @@
 package com.hcf.nszh.provider.system.interceptor;
 
+import com.hcf.nszh.common.interceptor.BaseFeignRequestInterceptor;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @Author huangxiong
+ * @Author maruko
  * @Date 2019/7/31
  **/
 @Component
@@ -28,26 +25,11 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     }
 
     private HttpServletRequest getHttpServletRequest() {
-        try {
-            return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        } catch (Exception e) {
-            log.error("HttpServletRequest :{}", e);
-            return null;
-        }
+        return BaseFeignRequestInterceptor.getHttpServletRequest();
     }
 
     private Map<String, String> getHeaders(HttpServletRequest request) {
-        if (null == request) {
-            return null;
-        }
-        Map<String, String> map = new LinkedHashMap<>();
-        Enumeration<String> enumeration = request.getHeaderNames();
-        while (enumeration.hasMoreElements()) {
-            String key = enumeration.nextElement().toLowerCase();
-            String value = request.getHeader(key);
-            map.put(key, value);
-        }
-        return map;
+        return BaseFeignRequestInterceptor.getHeaders(request);
     }
 
     @Bean

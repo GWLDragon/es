@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 /**
- * @author hx
+ * @author maruko
  * 全局解决不支持跨域访问问题
  * <p>
  * 方式二：添加   @CrossOrigin // 注解方式

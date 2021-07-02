@@ -5,8 +5,9 @@ server:
     uri-encoding: UTF-8
     # 加大tomcat最大连接数, 这里给400
     accept-count: 400
-    max-threads: 400
     max-connections: 400
+    threads:
+      max: 400
 
 # spring配置
 spring:

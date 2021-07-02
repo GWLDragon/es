@@ -19,7 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import java.util.concurrent.*;
 
 /**
- * @Author huangxiong
+ * @author maruko
  * @Date 2019/6/29
  **/
 @Slf4j
@@ -97,17 +97,22 @@ public class UserUtils {
         return null;
     }
 
-    public static UserVo get(String id) {
-        StringRedisTemplate stringRedisTemplate = SpringContextUtils.
+    public static StringRedisTemplate stringRedisTemplate() {
+        SpringContextUtils springContextUtils = new SpringContextUtils();
+        StringRedisTemplate stringRedisTemplate = springContextUtils.
                 getBean(StringRedisTemplate.class);
+        return stringRedisTemplate;
+    }
+
+    public static UserVo get(String id) {
+        StringRedisTemplate stringRedisTemplate = stringRedisTemplate();
         UserVo user = JSON.parseObject(stringRedisTemplate.opsForValue().get(CacheConstant.USER_CACHE +
                 CacheConstant.USER_CACHE_ID_ + id), UserVo.class);
         return user;
     }
 
     public static void clearCache(UserVo userVo) {
-        StringRedisTemplate stringRedisTemplate = SpringContextUtils.
-                getBean(StringRedisTemplate.class);
+        StringRedisTemplate stringRedisTemplate = stringRedisTemplate();
         stringRedisTemplate.delete(CacheConstant.USER_CACHE + CacheConstant.USER_CACHE_ID_
                 + userVo.getUserId());
         stringRedisTemplate.delete(CacheConstant.USER_CACHE + CacheConstant.USER_CACHE_USER_ID_
@@ -152,8 +157,7 @@ public class UserUtils {
         @Override
         public String call() {
             log.info("KeepCurrentUserCacheTask userId :{} start", principal.getId());
-            StringRedisTemplate stringRedisTemplate = SpringContextUtils.
-                    getBean(StringRedisTemplate.class);
+            StringRedisTemplate stringRedisTemplate = stringRedisTemplate();
             if (stringRedisTemplate.hasKey(CacheConstant.USER_CACHE +
                     CacheConstant.USER_CACHE_LOGIN_NAME_
                     + principal.getLoginName())) {

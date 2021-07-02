@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
- * @Author hx
+ * @Author maruko
  * @Date 2019/7/12
  **/
 @Api(value = "API - CaptchaController", description = "验证码接口")
@@ -28,8 +28,7 @@ public class CaptchaController {
     private Producer captchaProducer;
 
     @GetMapping("/captcha.jpg")
-    public void getCaptcha(@RequestParam(value = "t", required = false) String t,
-                           HttpServletRequest request, HttpServletResponse response) throws  IOException {
+    public void getCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setDateHeader("Expires", 0);
         // Set standard HTTP/1.1 no-cache headers.
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");

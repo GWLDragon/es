@@ -1,6 +1,3 @@
-/**
- *  .
- */
 package com.hcf.nszh.common.supcan.treelist;
 
 import com.hcf.nszh.common.supcan.common.fonts.SupFont;
@@ -11,7 +8,7 @@ import java.lang.annotation.*;
 
 /**
  * 硕正TreeList注解
- * @author WangZhen
+ * @author maruko
  * @version 2013-11-12
  * 在类上添加注解，应用实例：
 

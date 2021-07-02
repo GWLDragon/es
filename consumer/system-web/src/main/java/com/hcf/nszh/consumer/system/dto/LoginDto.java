@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/6/26
  **/
 @ApiModel(value = "用户登录传入信息")

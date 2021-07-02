@@ -16,11 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/6/13 0013
+ * @Order 控制多个Aspect的执行顺序，越小越先执行
  **/
 @Aspect
-@Order(-99) // 控制多个Aspect的执行顺序，越小越先执行
+@Order(-99)
 @Slf4j
 @Component
 public class RequestLoggingAspect {

@@ -31,7 +31,7 @@ import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/6/26
  **/
 @Api(value = "API - LoginController", description = "登录服务")
@@ -71,13 +71,13 @@ public class LoginController {
             SecurityUtils.getSubject().logout();
             try {
                 currentUser.login(token);
-            }catch (Exception e){
-                log.error("错误信息{}",e);
+            } catch (Exception e) {
+                log.error("错误信息{}", e);
             }
 
             userApiService.updateUserLoginInfo(loginDto.getUsername(), request);
             //从缓存里取用户信息
-            UserVo userVo =  JSON.parseObject(redisTemplate.opsForValue().get(CacheConstant.USER_CACHE +
+            UserVo userVo = JSON.parseObject(redisTemplate.opsForValue().get(CacheConstant.USER_CACHE +
                     CacheConstant.USER_CACHE_LOGIN_NAME_
                     + loginDto.getUsername()), UserVo.class);
             return new ResponseVo<>(ErrorEnum.SUCCESS, userVo);
@@ -96,16 +96,16 @@ public class LoginController {
         } catch (UnauthorizedException e) {
             return new ResponseVo<>(ErrorEnum.USER_NO_PERMISSION);
         } catch (AuthenticationException e) {
-            return new ResponseVo<>(-1,e.getMessage());
+            return new ResponseVo<>(-1, e.getMessage());
         } catch (BusinessException e) {
-            return new ResponseVo<>(-1,e.getMessage());
-        }finally {
+            return new ResponseVo<>(-1, e.getMessage());
+        } finally {
             SecurityUtils.getSubject().getSession().removeAttribute(CaptchaController.KEY_CAPTCHA);
         }
     }
 
 
-    public void verifyUser(String account, String pwIdent){
+    public void verifyUser(String account, String pwIdent) {
 
         if (StringUtils.isEmpty(account) || StringUtils.isEmpty(pwIdent)) {
             throw new BusinessException("用户名/密码不能为空");
@@ -115,19 +115,19 @@ public class LoginController {
         this.verifyPasswordBefore(account);
         Boolean result = Boolean.FALSE;
         // 用户以用户名/密码的方式进行登录，校验密码是否匹配
-        ResponseVo<UserVo> uservoRsp = userApiService.getUserByLoginName(account);
-        UserVo userVo1 = uservoRsp.getData();
-        if(userVo1!=null) {
-            boolean passwordResult =  AesUtils.validatePassword(AesUtils.aesDecrypt(pwIdent),userVo1.getPassword());
+        ResponseVo<UserVo> userVo = userApiService.getUserByLoginName(account);
+        UserVo userVo1 = userVo.getData();
+        if (userVo1 != null) {
+            boolean passwordResult = AesUtils.validatePassword(AesUtils.aesDecrypt(pwIdent), userVo1.getPassword());
             if (passwordResult) {
                 result = Boolean.TRUE;
             }
-        }else {
+        } else {
             result = Boolean.FALSE;
         }
         // 对登录参数校验后，给出最后的结果处理
-        log.info("---------------- 对登录参数校验后，给出最后的结果处理：【result:"+result+"】,result的结果如果为false,密码校验失败（用户名/密码登录）----------------");
-        this.verifyPasswordAfter(result,account);
+        log.info("---------------- 对登录参数校验后，给出最后的结果处理：【result:" + result + "】,result的结果如果为false,密码校验失败（用户名/密码登录）----------------");
+        this.verifyPasswordAfter(result, account);
     }
 
     /**
@@ -136,22 +136,18 @@ public class LoginController {
      *
      * @param account
      */
-    private void verifyPasswordBefore(String account){
+    private void verifyPasswordBefore(String account) {
         // 拼接redis缓存的key
         String loginTimesKey = MessageFormat.format(CacheConstant.LOGIN_FAIL_TIMES_KEY, account);
-        log.info("---------------- 拼接redis缓存的keyloginTimesKey:"+loginTimesKey+"----------------");
+        log.info("---------------- 拼接redis缓存的keyLoginTimesKey:" + loginTimesKey + "----------------");
 
         // 分别查询账户以及ip已有的限制条数
-        String times_str = redisTemplate.opsForValue().get(loginTimesKey);
-        long times = Long.parseLong( times_str==null?"0":times_str );
-        log.info("---------------- 用户账户限制次数times:"+times+"----------------");
-
-
-        if(times>=CacheConstant.LOGIN_FAIL_TIMES) {
+        Long times = timeOut(loginTimesKey);
+        if (times >= CacheConstant.LOGIN_FAIL_TIMES) {
             // 超出登录账号限制5次，锁住用户账号，限制登录
             Long ttl = redisTemplate.getExpire(loginTimesKey);
-            log.info("---------------- 超出登录账号限制次数tt1:"+ttl+"----------------");
-            throw new BusinessException(-1,"该用户登录失败超过"+ CacheConstant.LOGIN_FAIL_TIMES+"次，请"+(ttl/3600+"小时"+(ttl -  ttl/3600*3600)/60)+"分钟后再试");
+            log.info("---------------- 超出登录账号限制次数tt1:" + ttl + "----------------");
+            throw new BusinessException(-1, "该用户登录失败超过" + CacheConstant.LOGIN_FAIL_TIMES + "次，请" + (ttl / 3600 + "小时" + (ttl - ttl / 3600 * 3600) / 60) + "分钟后再试");
         }
     }
 
@@ -161,37 +157,48 @@ public class LoginController {
      * @param flag
      * @param account
      */
-    private void verifyPasswordAfter(Boolean flag,String account)throws BusinessException{
+    private void verifyPasswordAfter(Boolean flag, String account) throws BusinessException {
         // 拼接redis缓存的key
         String loginTimesKey = MessageFormat.format(CacheConstant.LOGIN_FAIL_TIMES_KEY, account);
         // 校验最终结果：正确
-        if(flag) {
+        if (flag) {
             // 如果有正确的登录情况，则将缓存中记录的错误缓存删除掉
-            if(redisTemplate.hasKey(loginTimesKey)){
+            if (redisTemplate.hasKey(loginTimesKey)) {
                 redisTemplate.delete(loginTimesKey);
             }
             return;
         }
         // 校验最终结果：错误
-        if(!redisTemplate.hasKey(loginTimesKey)){
-            redisTemplate.opsForValue().set(loginTimesKey,"1");
-        }else{
+        if (!redisTemplate.hasKey(loginTimesKey)) {
+            redisTemplate.opsForValue().set(loginTimesKey, "1");
+        } else {
             redisTemplate.opsForValue().increment(loginTimesKey, 1);
-            String times_str = (String) redisTemplate.opsForValue().get(loginTimesKey);
-            long times = Long.parseLong( times_str==null?"0":times_str );
-            log.info("---------------- 用户账户限制次数times:"+times+"----------------");
-            if(times >=CacheConstant.LOGIN_FAIL_TIMES){
+            Long times = timeOut(loginTimesKey);
+            if (times >= CacheConstant.LOGIN_FAIL_TIMES) {
                 // 开始锁定改账号1小时
-                redisTemplate.expire(loginTimesKey,CacheConstant.NEXT_LOGIN_TIMES, TimeUnit.HOURS);
+                redisTemplate.expire(loginTimesKey, CacheConstant.NEXT_LOGIN_TIMES, TimeUnit.HOURS);
             }
         }
-        throw new BusinessException("该用户已登录失败"+redisTemplate.opsForValue().get(loginTimesKey)+"次，还剩下"+(CacheConstant.LOGIN_FAIL_TIMES-Integer.parseInt((String) redisTemplate.opsForValue().get(loginTimesKey)))+"次机会");
+        throw new BusinessException("该用户已登录失败" + redisTemplate.opsForValue().get(loginTimesKey) + "次，还剩下"
+                + (CacheConstant.LOGIN_FAIL_TIMES - Integer.parseInt(redisTemplate.opsForValue().get(loginTimesKey))) + "次机会");
 
 
     }
 
     /**
-     * 
+     * 用户登录次数
+     *
+     * @param loginTimesKey
+     * @return
+     */
+    private Long timeOut(String loginTimesKey) {
+        String timesStr = redisTemplate.opsForValue().get(loginTimesKey);
+        long times = Long.parseLong(timesStr == null ? "0" : timesStr);
+        log.info("---------------- 用户账户限制次数times:" + times + "----------------");
+        return times;
+    }
+
+    /**
      * @return
      */
     @ApiOperation("用户登出")

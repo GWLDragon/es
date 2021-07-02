@@ -4,7 +4,7 @@ package com.hcf.nszh.common.exception;
 import com.hcf.nszh.common.enums.ErrorEnum;
 
 /**
- * @author hx
+ * @author maruko
  * 业务异常
  */
 public class BusinessException extends RuntimeException {
@@ -12,7 +12,8 @@ public class BusinessException extends RuntimeException {
     /**
      *
      */
-    private static final long serialVersionUID = 2897424491337847469L;
+    private static final long SERIALVERSIONUID = 2897424491337847469L;
+
 
     /**
      * 错误码
@@ -50,8 +51,8 @@ public class BusinessException extends RuntimeException {
         this.setMessage(message);
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public static long getSerialVersionUid() {
+        return SERIALVERSIONUID;
     }
 
     public int getErrorCode() {

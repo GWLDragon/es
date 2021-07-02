@@ -1,6 +1,3 @@
-/**
- * .
- */
 package com.hcf.nszh.common.utils;
 
 import org.apache.commons.lang3.Validate;
@@ -15,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 以静态变量保存Spring ApplicationContext, 可在任何代码任何地方任何时候取出ApplicaitonContext.
- * @author hx
+ * @author maruko
  */
 @Service
 @Lazy(false)

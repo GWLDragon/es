@@ -5,8 +5,9 @@ server:
   tomcat:
     uri-encoding: UTF-8
     accept-count: 500
-    max-threads: 500
     max-connections: 500
+    threads:
+      max: 500
 spring:
   main:
     allow-bean-definition-overriding: true

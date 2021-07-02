@@ -1,4 +1,3 @@
-
 package com.hcf.nszh.common.security;
 
 import com.hcf.nszh.common.algorithm.Base58Algorithm;
@@ -14,7 +13,7 @@ import java.security.SecureRandom;
  * <p>
  * 返回ByteSource，可进一步被编码为Hex, Base64或UrlSafeBase64
  *
- * @author calvin
+ * @author maruko
  */
 public class Digests {
 

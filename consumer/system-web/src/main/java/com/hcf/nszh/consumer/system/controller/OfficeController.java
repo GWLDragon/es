@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/7/22
  **/
 @Api(value = "API - OfficeController", description = "机构管理")
@@ -68,8 +68,8 @@ public class OfficeController {
     @RequestLogging
     @PostMapping("operatorOffice")
     public ResponseVo<OfficeDetailVO> operatorOffice(@RequestBody OperatorOfficeDTO operatorOfficeDTO) {
-        ResponseVo<OfficeDetailVO> officeDetailVOResponseVo = officeApiService.operatorOffice(operatorOfficeDTO);
-        return officeDetailVOResponseVo;
+        ResponseVo<OfficeDetailVO> responseVo = officeApiService.operatorOffice(operatorOfficeDTO);
+        return responseVo;
 
     }
 
@@ -85,22 +85,23 @@ public class OfficeController {
     @RequestLogging
     @PostMapping("/addressBook")
     public ResponseVo<Page<AddressBookVo>> addressBook(@RequestBody SearchAddressDTO searchAddressDTO) {
-        ResponseVo<Page<AddressBookVo>> listResponseVo = officeApiService.addressBook(searchAddressDTO.getPageNum(),searchAddressDTO.getPageSize(),searchAddressDTO.getSearch(),searchAddressDTO.getOfficeIds());
+        ResponseVo<Page<AddressBookVo>> listResponseVo = officeApiService.addressBook(searchAddressDTO.getPageNum(), searchAddressDTO.getPageSize(),
+                searchAddressDTO.getSearch(), searchAddressDTO.getOfficeIds());
         return listResponseVo;
     }
 
     @ApiOperation("根据用户ID查询用户的机构根ID,use")
     @GetMapping("getRootOfficeIdByUserId")
     public ResponseVo<String> getRootOfficeIdByUserId(@RequestParam("userId") Long userId) {
-        return  officeApiService.getRootOfficeIdByUserId(userId);
+        return officeApiService.getRootOfficeIdByUserId(userId);
     }
 
     @ApiOperation("机构名称查询,use")
     @RequestLogging
     @GetMapping(value = "/getOfficeByName")
     public ResponseVo<List<OfficeVo>> getOfficeByName(@ApiParam(value = "名称", required = true) @RequestParam(value = "name") String name,
-                                                  @ApiParam(value = "上级机构", required = true) @RequestParam(value = "parentId") String parentId) {
-        return  officeApiService.getOfficeByName(name,parentId);
+                                                      @ApiParam(value = "上级机构", required = true) @RequestParam(value = "parentId") String parentId) {
+        return officeApiService.getOfficeByName(name, parentId);
     }
 
     @ApiOperation("机构编码查询,use")
@@ -108,13 +109,13 @@ public class OfficeController {
     @GetMapping(value = "/getOfficeByCode")
     public ResponseVo<List<OfficeVo>> getOfficeByCode(@ApiParam(value = "编码", required = true) @RequestParam(value = "code") String code,
                                                       @ApiParam(value = "上级机构", required = true) @RequestParam(value = "parentId") String parentId) {
-        return  officeApiService.getOfficeByCode(code,parentId);
+        return officeApiService.getOfficeByCode(code, parentId);
     }
 
     @ApiOperation("获取根机构,use")
     @RequestLogging
     @GetMapping("/getRootOffice")
-    public ResponseVo<List<OfficeVo>> getRootOffice(){
-        return  officeApiService.getRootOffice();
+    public ResponseVo<List<OfficeVo>> getRootOffice() {
+        return officeApiService.getRootOffice();
     }
 }

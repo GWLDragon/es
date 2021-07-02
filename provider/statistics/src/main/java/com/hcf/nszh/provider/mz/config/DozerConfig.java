@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 /**
- * @author hx
+ * @author maruko
  */
 @Configuration
 public class DozerConfig {

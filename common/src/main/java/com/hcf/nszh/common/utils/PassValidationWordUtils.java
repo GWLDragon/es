@@ -1,41 +1,52 @@
 package com.hcf.nszh.common.utils;
 
+import com.hcf.nszh.common.enums.NumberEnum;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * 20191116
  *
- * @author ygr
+ * @author maruko
  */
 public class PassValidationWordUtils {
-    static int maxSeqCnt = 3;//允许键盘最大连续次数
-    static String seqStr[] = {"qwertyuiopasdfghjklzxcvbnm",
+
+
+    /**
+     * 允许键盘最大连续次数
+     */
+    private static int maxSeqCnt = 3;
+
+    private static String[] SEQSTR = {"qwertyuiopasdfghjklzxcvbnm",
             "QWERYUIOPASDFGHJKLZXCVBNM",
             "1234567890-=",
             "qwertyuiop[]\\asdfghjkl;'zxcvbnm,./",
     };
-    static final String PW_PATTERN = "^(?![A-Za-z0-9]+$)(?![a-z0-9\\W]+$)(?![A-Za-z\\W]+$)(?![A-Z0-9\\W]+$)[a-zA-Z0-9\\W]{8,}$";
-    static final Pattern p = Pattern.compile("(\\w)\\1{2,}");
+    private static final String PW_PATTERN = "^(?![A-Za-z0-9]+$)(?![a-z0-9\\W]+$)(?![A-Za-z\\W]+$)(?![A-Z0-9\\W]+$)[a-zA-Z0-9\\W]{8,}$";
+    private static final Pattern PATTERN = Pattern.compile("(\\w)\\1{2,}");
 
     /**
      * 判断连续字符串、连续键盘,返回true代表密码不符合规定
      */
     public static boolean isSeqString(String str) {
-        Matcher m = p.matcher(str);
-        boolean result = m.find() ? true : false;
+        Matcher m = PATTERN.matcher(str);
+        boolean result = m.find();
         if (result) {
-            return result;
+            return false;
 
         }
         int size = str.length();
-        String temp = "";
-        int offet = 0;
-        for (String s : seqStr) {//提前定义的连续字符串
-            offet = 0;
-            for (int i = maxSeqCnt; i <= size; i++) {//直接从最大允许的字符开始截取字符
-                temp = str.substring(offet++, i);
-                if (s.contains(temp)) {//出现连续字符，直接返回true了
+        String temp;
+        int offSet;
+        for (String s : SEQSTR) {
+            //提前定义的连续字符串
+            offSet = 0;
+            for (int i = maxSeqCnt; i <= size; i++) {
+                //直接从最大允许的字符开始截取字符
+                temp = str.substring(offSet++, i);
+                if (s.contains(temp)) {
+                    //出现连续字符，直接返回true了
                     return true;
                 }
             }
@@ -43,9 +54,9 @@ public class PassValidationWordUtils {
         return false;
     }
 
-    public static boolean continuousKB1(String str) {
+    public static boolean continuouskb(String str) {
         str = str.toLowerCase();
-        boolean result = false;
+
         char[][] c1 = {
                 {'!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+'},
                 {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '|'},
@@ -63,10 +74,10 @@ public class PassValidationWordUtils {
 
             //横向
             for (int i = 0; i < c.length; i++) {
-                for (int j = 0; j < c[i].length - 2; j++) {
+                for (int j = 0; j < c[i].length - NumberEnum.TWO; j++) {
                     //创建连续字符
-                    StringBuffer sb = new StringBuffer();
-                    for (int k = j; k < j + 3; k++) {
+                    StringBuilder sb = new StringBuilder();
+                    for (int k = j; k < j + NumberEnum.THREE; k++) {
                         sb.append(c[i][k]);
                     }
                     String keyStr = sb.toString();
@@ -77,10 +88,10 @@ public class PassValidationWordUtils {
             }
 
             //纵向
-            for (int i = 0; i < c[3].length; i++) {
+            for (int i = 0; i < c[NumberEnum.THREE].length; i++) {
                 //创建连续字符--每列只有4个
-                StringBuffer sb = new StringBuffer();
-                for (int j = 0; j < 4; j++) {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < NumberEnum.FOUR; j++) {
                     sb.append(c[j][i]);
                 }
                 String keyStr = sb.toString();
@@ -97,15 +108,13 @@ public class PassValidationWordUtils {
         }
 
 
-        return result;
+        return false;
 
     }
 
     /**
      * 密码至少8位，且至少包含字母、特殊字符、数字、大小，返回true代表密码符合
      *
-     * @param str
-     * @return
      */
     public static boolean isTruePassword(String str) {
         return str.matches(PW_PATTERN);
@@ -114,14 +123,14 @@ public class PassValidationWordUtils {
     /**
      * 测试
      */
-    public static void main(String[] args) throws Exception {
-        String pw1 = "ABCDEFGHIG";
+    public static void main(String[] args) {
         String s = "aa011a";
-        Matcher m = p.matcher(s);
-        System.out.println(continuousKB1("#ED"));
-        System.out.println(continuousKB1("VFR"));
-        System.out.println(continuousKB1("1QA"));
-        System.out.println(continuousKB1("12q"));
+        Matcher m = PATTERN.matcher(s);
+        System.out.println(m);
+        System.out.println(continuouskb("#ED"));
+        System.out.println(continuouskb("VFR"));
+        System.out.println(continuouskb("1QA"));
+        System.out.println(continuouskb("12q"));
 
     }
 }

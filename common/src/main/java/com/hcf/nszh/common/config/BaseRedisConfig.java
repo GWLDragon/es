@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Author hx
+ * @author maruko
  * @Date 2019/7/1
  **/
-public class RedisConfigurationUtil {
+public class BaseRedisConfig {
 
     public static RedisClusterConfiguration getJedisCluster(RedisProperties redisProperties) {
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();

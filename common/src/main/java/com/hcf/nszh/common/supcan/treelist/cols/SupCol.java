@@ -1,24 +1,18 @@
-/**
- *  .
- */
 package com.hcf.nszh.common.supcan.treelist.cols;
 
 import java.lang.annotation.*;
 
 /**
  * 硕正Col注解
- * @author WangZhen
+ * @author maruko
  * @version 2013-11-12
  * 在get方法上添加注解，应用实例：
- * 
- * 		@SupCol(text="归属公司", sort = 10)
+ *
  */
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface SupCol {
-
-	///////////////////////////////////// 主要 //////////////////////////////////////
 	
 	/**
 	 * 列名（默认当前字段名）

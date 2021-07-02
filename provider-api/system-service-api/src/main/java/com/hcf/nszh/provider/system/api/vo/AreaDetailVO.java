@@ -1,6 +1,6 @@
 package com.hcf.nszh.provider.system.api.vo;
 
-import com.hcf.nszh.common.persistence.TreeEntity;
+import com.hcf.nszh.common.persistence.AbstractTreeEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AreaDetailVO extends TreeEntity<AreaDetailVO> {
+public class AreaDetailVO extends AbstractTreeEntity<AreaDetailVO> {
 
     @ApiModelProperty("区域编码")
     private String code;

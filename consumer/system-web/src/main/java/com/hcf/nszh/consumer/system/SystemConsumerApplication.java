@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * @Author hx
+ * @Author maruko
  * @Date 2019/6/26
  **/
 @ComponentScan({"com.hcf.nszh.*"})

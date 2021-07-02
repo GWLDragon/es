@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- * @author hx
+ * @author maruko
  */
 @SpringBootApplication
 @EnableEurekaServer
@@ -25,7 +25,8 @@ public class EurekaServiceApplication {
         protected void configure(HttpSecurity http) throws Exception {
             super.configure(http);
             http.csrf().disable();
-            http.authorizeRequests().anyRequest().authenticated().and().httpBasic(); // 开启认证
+            // 开启认证
+            http.authorizeRequests().anyRequest().authenticated().and().httpBasic();
         }
     }
 

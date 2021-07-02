@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * <b>注意：此清空并不是将redis上所以的缓存都清空，只是根据缓存id（或是当前执行类、注解标注类）的缓存清空</b>
  * </p>
  * 
- * @author lc
+ * @author maruko
  * @date 2019年1月4日
  */
 @Retention(RetentionPolicy.RUNTIME)

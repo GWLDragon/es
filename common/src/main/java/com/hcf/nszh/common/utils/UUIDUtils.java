@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * @author  Furant
+ * @author  maruko
  * 2019/7/16 15:25
  */
 public class UUIDUtils implements SessionIdGenerator {

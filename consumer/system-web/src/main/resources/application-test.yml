@@ -7,16 +7,17 @@ server:
     uri-encoding: UTF-8
     # 加大tomcat最大连接数, 这里给400
     accept-count: 500
-    max-threads: 500
     max-connections: 500
+    threads:
+      max: 500
 
 spring:
   application:
     name: system-web
   redis:
     database: 0
-    #host: 150.103.73.215
-    #port: 6379
+    host: 150.103.73.215
+    port: 6379
     password: '!123@password'
     timeout: 15000
     encode: UTF-8

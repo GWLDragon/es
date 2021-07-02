@@ -1,17 +1,12 @@
 package com.hcf.nszh.provider.mz.config;
 
-import com.hcf.nszh.common.config.RedisConfigurationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.hcf.nszh.common.config.BaseRedisConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,28 +22,16 @@ import java.io.Serializable;
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class RedisConfiguration {
 
-    @Autowired
-    private RedisProperties redisProperties;
-
-    @Value("${spring.profiles.active}")
-    private String active;
-
-/*    @Bean
-    @ConditionalOnProperty(prefix = "spring.profiles", name = "active", havingValue = "prod")
-    public RedisClusterConfiguration getJedisCluster() {
-        return RedisConfigurationUtil.getJedisCluster(redisProperties);
-    }*/
-
     @Bean
     @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<String, Serializable> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.redisTemplate(redisConnectionFactory);
+        return BaseRedisConfig.redisTemplate(redisConnectionFactory);
     }
 
     @Bean
     @ConditionalOnMissingBean(StringRedisTemplate.class)
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.stringRedisTemplate(redisConnectionFactory);
+        return BaseRedisConfig.stringRedisTemplate(redisConnectionFactory);
     }
 
     /**
@@ -59,6 +42,6 @@ public class RedisConfiguration {
      */
     @Bean
     public RedisCacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory) {
-        return RedisConfigurationUtil.cacheManager(redisConnectionFactory);
+        return BaseRedisConfig.cacheManager(redisConnectionFactory);
     }
 }

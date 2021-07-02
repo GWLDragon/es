@@ -1,6 +1,7 @@
 package com.hcf.nszh.gateway.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hcf.nszh.gateway.enums.MethodEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -19,13 +20,13 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author hx
+ * @Author maruko
  * @Date 2019/6/19
  **/
 @Component
 @Slf4j
 @Configuration
-public class DemoFilter implements GlobalFilter, Ordered{
+public class DemoFilter implements GlobalFilter, Ordered {
 
     private static final String REQUEST_TIME_BEGIN = "requestTimeBegin";
 
@@ -41,33 +42,35 @@ public class DemoFilter implements GlobalFilter, Ordered{
         ServerHttpResponse resp = exchange.getResponse();
         String referer = req.getHeaders().getFirst("referer");
         String origin = req.getHeaders().getFirst("origin");
-        log.info("------------从request中获取到的referer："+referer+"--------origin: "+origin);
+        log.info("------------从request中获取到的referer：" + referer + "--------origin: " + origin);
         // 只验证POST请求
         String method = req.getMethod().toString();
-        if ("POST".equals(method) || "GET".equals(method)) {
+        if (MethodEnum.POST.equals(method) || MethodEnum.GET.equals(method)) {
 
             java.net.URL refererUrl;
-            java.net.URL originUrl ;
+            java.net.URL originUrl;
             String refererHost = null;
             String originHost = null;
             try {
-                if(referer != null){
+                if (referer != null) {
                     refererUrl = new java.net.URL(referer);
                     refererHost = refererUrl.getHost();
                 }
-                if(origin != null){
+                if (origin != null) {
                     originUrl = new java.net.URL(origin);
                     originHost = originUrl.getHost();
                 }
             } catch (MalformedURLException e) {
             }
 
-            log.info("------------开始进入请求地址拦截-------host: "+refererHost+"------refererDomains: "+refererDomains.toString());
+            log.info("------------开始进入请求地址拦截-------host: " + refererHost + "------refererDomains: " + refererDomains.toString());
 
-            if(refererHost != null){
+            if (refererHost != null) {
                 if (refererDomains != null) {
                     for (String s : refererDomains) {
-                        if ((s.equals(refererHost) && s.equals(originHost))|| (s.equals(refererHost) && originHost == null) || "*%&!80djlbv@".equals(s)  ) {
+                        boolean b = s.equals(refererHost) && s.equals(originHost);
+                        boolean b1 = s.equals(refererHost) && originHost == null;
+                        if (b || b1 || "*%&!80djlbv@".equals(s)) {
                             log.info("---------------------能比配----------------------------");
                             return chain.filter(exchange).then(
                                     Mono.fromRunnable(() -> {

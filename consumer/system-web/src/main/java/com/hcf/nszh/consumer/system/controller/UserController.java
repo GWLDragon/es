@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hcf.nszh.common.annotation.RequestLogging;
 import com.hcf.nszh.common.base.ResponseVo;
 import com.hcf.nszh.common.enums.ErrorEnum;
+import com.hcf.nszh.common.enums.NumberEnum;
 import com.hcf.nszh.common.utils.AesUtils;
 import com.hcf.nszh.common.utils.PassValidationWordUtils;
-import com.hcf.nszh.common.utils.StringUtils;
 import com.hcf.nszh.provider.system.api.dto.DeleteUserDto;
 import com.hcf.nszh.provider.system.api.dto.QueryUserPageDto;
 import com.hcf.nszh.provider.system.api.dto.SaveUserDto;
 import com.hcf.nszh.provider.system.api.dto.UpdatePasswordDTO;
-import com.hcf.nszh.provider.system.api.vo.*;
 import com.hcf.nszh.provider.system.api.service.UserApiService;
+import com.hcf.nszh.provider.system.api.vo.*;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author  Furant
+ * @author maruko
  * 2019/7/18 19:39
  */
 @Api(value = "API - UserController", description = "用户管理")
@@ -51,19 +51,19 @@ public class UserController {
         String pwIdent = saveUserDto.getPassword();
         if (Strings.isNotBlank(pwIdent)) {
             String passwordAes = AesUtils.aesDecrypt(pwIdent);
-            if (passwordAes.length() > 30) {
+            if (passwordAes.length() > NumberEnum.THIRTY) {
                 return new ResponseVo(-2, "用户密码不能超出30个字符");
             }
 
-            boolean isTruePsswrd = PassValidationWordUtils.isTruePassword(passwordAes);
-            if (!isTruePsswrd) {
+            boolean isTruePassword = PassValidationWordUtils.isTruePassword(passwordAes);
+            if (!isTruePassword) {
                 return new ResponseVo(-2, "用户密码至少是八位数，同时包含大小写字母、数字、及特殊字符");
             }
             boolean isSeqString = PassValidationWordUtils.isSeqString(passwordAes);
             if (isSeqString) {
                 return new ResponseVo(-2, "用户密码不允许使用连续3位以上的字符（或键盘上的连续字符）");
             }
-            boolean continuousKB = PassValidationWordUtils.continuousKB1(passwordAes);
+            boolean continuousKB = PassValidationWordUtils.continuouskb(passwordAes);
             if (continuousKB) {
                 return new ResponseVo(-2, "用户密码不允许使用连续3位以上的字符（或键盘上的连续字符）");
             }
@@ -74,9 +74,9 @@ public class UserController {
     }
 
     @RequestLogging
-    @GetMapping("/findRoledUser")
-    public ResponseVo<List<UserVo>> findRoledUser(@RequestParam(value = "roleId") String roleId,
-                                                  @RequestParam(value = "officeId") String officeId) {
+    @GetMapping("/findRoleUser")
+    public ResponseVo<List<UserVo>> findRoleUser(@RequestParam(value = "roleId") String roleId,
+                                                 @RequestParam(value = "officeId") String officeId) {
         return userApiService.findRoledUser(roleId, officeId);
     }
 
@@ -106,13 +106,13 @@ public class UserController {
     }
 
     @ApiOperation(value = "获取没有分配该角色的用户，use", notes = "获取角色的用户信息")
-    @GetMapping(value = "/unRoledUser/{roleId}")
+    @GetMapping(value = "/unRoleUser/{roleId}")
     ResponseVo<List<UserBaseVo>> unRoledUser(@PathVariable String roleId) {
         return userApiService.unRoledUser(roleId);
     }
 
     @ApiOperation(value = "获取没有分配该角色的机构下的用户，use", notes = "获取角色的用户信息")
-    @GetMapping(value = "/unRoledOfficeOfUser/{roleId}")
+    @GetMapping(value = "/unRoleOfficeOfUser/{roleId}")
     ResponseVo<List<OfficeOfUserVo>> unRoledOfficeOfUser(@PathVariable String roleId) {
         return userApiService.unRoledOfficeOfUser(roleId);
     }
@@ -198,10 +198,10 @@ public class UserController {
 
     @ApiOperation(value = "添加用户皮肤", notes = "保存用户皮肤")
     @GetMapping(value = "/saveSkin")
-    public ResponseVo<?> seveUserSkin(@RequestParam(required = true, value = "userId") String userId,
+    public ResponseVo<?> saveUserSkin(@RequestParam(value = "userId") String userId,
                                       @RequestParam(required = false, value = "skin") String skin,
                                       @RequestParam(required = false, value = "sysSkin") String sysSkin) {
-        ResponseVo<Boolean> booleanResponseVo = userApiService.seveUserSkin(userId, skin ,sysSkin);
+        ResponseVo<Boolean> booleanResponseVo = userApiService.seveUserSkin(userId, skin, sysSkin);
         return new ResponseVo<>(ErrorEnum.SUCCESS, booleanResponseVo);
 
     }

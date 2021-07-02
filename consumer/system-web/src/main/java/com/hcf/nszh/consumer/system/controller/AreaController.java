@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author Furant
+ * @author maruko
  * 2019/7/5 0:34
  */
 @Api(value = "API - AreaController", description = "区域管理")
@@ -20,7 +20,6 @@ public class AreaController {
 
     @Autowired
     private AreaApiService areaApiService;
-
 
     @ApiOperation("查询所有区域")
     @RequestLogging

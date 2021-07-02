@@ -11,7 +11,7 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
- * @author hx
+ * @author maruko
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

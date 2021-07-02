@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hcf.nszh.common.constant.CacheConstant;
 import com.hcf.nszh.common.enums.ErrorEnum;
+import com.hcf.nszh.common.enums.StringEnum;
 import com.hcf.nszh.common.exception.BusinessException;
 import com.hcf.nszh.common.security.shiro.utils.UserUtils;
 import com.hcf.nszh.provider.system.api.vo.MenuVo;
@@ -31,8 +32,8 @@ import java.util.List;
 
 /**
  * 填充service入参中lastUpdateBy的公共类
- * 
- * @author lc
+ *
+ * @author maruko
  * @date 2018年11月26日
  */
 @Order(5)
@@ -41,63 +42,63 @@ import java.util.List;
 @Slf4j
 public class FilterNonAuthor {
 
-	private static List<JSONObject> authorJsonArray;
+    private static List<JSONObject> authorJsonArray;
 
-	@Autowired
-	private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
-	public FilterNonAuthor() throws IOException {
-		Resource resource = new ClassPathResource("author.json");
-		InputStream inputStream = resource.getInputStream();
-		String authorJson = IOUtils.toString(inputStream);
-		authorJsonArray = JSON.parseArray(authorJson, JSONObject.class);
-	}
+    public FilterNonAuthor() throws IOException {
+        Resource resource = new ClassPathResource("author.json");
+        InputStream inputStream = resource.getInputStream();
+        String authorJson = IOUtils.toString(inputStream);
+        authorJsonArray = JSON.parseArray(authorJson, JSONObject.class);
+    }
 
-	@Around("execution(* com.hcf.nszh.consumer.system.controller.*.*(..))")
-	public Object saveOpt(ProceedingJoinPoint joinPoint) throws Throwable {
-		String methodName = joinPoint.getSignature().toString();
-		if (methodName.contains("CaptchaController.getCaptcha") || methodName.contains("UserController.loginPost")
-				|| methodName.contains("LoginController.") || methodName.contains("UserController.infoData")
-				|| methodName.contains("AreaController.")) {
-			return joinPoint.proceed();
-		}
-		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+    @Around("execution(* com.hcf.nszh.consumer.system.controller.*.*(..))")
+    public Object saveOpt(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().toString();
+        if (methodName.contains(StringEnum.CAPTCHA_CONTROLLER_GET_CAPTCHA) || methodName.contains(StringEnum.USER_CONTROLLER_LOGIN_POST)
+                || methodName.contains("LoginController.") || methodName.contains("UserController.infoData")
+                || methodName.contains("AreaController.")) {
+            return joinPoint.proceed();
+        }
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
-		if (null == requestAttributes) {
-			// 可能是定时任务，不能获取到request
-			return joinPoint.proceed();
-		}
-		HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-		UserVo user = UserUtils.getUser();
-		// 从缓存里取用户信息
-		String cacheKey = CacheConstant.USER_CACHE + CacheConstant.USER_CACHE_LOGIN_NAME_ + user.getLoginName();
-		UserVo userVo = JSON.parseObject(redisTemplate.opsForValue().get(cacheKey), UserVo.class);
-		if (null == userVo) {
-			log.warn("获取到用户缓存为空，key为：{}", cacheKey);
-			return joinPoint.proceed();
-		}
-		List<MenuVo> menuVoList = userVo.getMenuVoList();
-		// 防止没有存入
-		if (null == menuVoList || menuVoList.isEmpty()) {
-			return joinPoint.proceed();
-		}
-		for (MenuVo menuVo : menuVoList) {
-			for (JSONObject obj : authorJsonArray) {
-				if (obj.containsKey(menuVo.getHref())) {
-					JSONArray array = (JSONArray) obj.get(menuVo.getHref());
-					for (Object operateUri : array) {
-						String operateUrl = operateUri.toString();
-						if (operateUrl.contains(request.getRequestURI()) || request.getRequestURI().contains(operateUrl)) {
-							return joinPoint.proceed();
-						}
-					}
-					log.warn("访问方法：{}", methodName);
-					throw new BusinessException(ErrorEnum.USER_NO_PERMISSION);
-				}
-			}
-		}
-		log.warn("访问方法：{}", methodName);
-		throw new BusinessException(ErrorEnum.USER_NO_PERMISSION);
-	}
+        if (null == requestAttributes) {
+            // 可能是定时任务，不能获取到request
+            return joinPoint.proceed();
+        }
+        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        UserVo user = UserUtils.getUser();
+        // 从缓存里取用户信息
+        String cacheKey = CacheConstant.USER_CACHE + CacheConstant.USER_CACHE_LOGIN_NAME_ + user.getLoginName();
+        UserVo userVo = JSON.parseObject(redisTemplate.opsForValue().get(cacheKey), UserVo.class);
+        if (null == userVo) {
+            log.warn("获取到用户缓存为空，key为：{}", cacheKey);
+            return joinPoint.proceed();
+        }
+        List<MenuVo> menuVoList = userVo.getMenuVoList();
+        // 防止没有存入
+        if (null == menuVoList || menuVoList.isEmpty()) {
+            return joinPoint.proceed();
+        }
+        for (MenuVo menuVo : menuVoList) {
+            for (JSONObject obj : authorJsonArray) {
+                if (obj.containsKey(menuVo.getHref())) {
+                    JSONArray array = (JSONArray) obj.get(menuVo.getHref());
+                    for (Object operateUri : array) {
+                        String operateUrl = operateUri.toString();
+                        if (operateUrl.contains(request.getRequestURI()) || request.getRequestURI().contains(operateUrl)) {
+                            return joinPoint.proceed();
+                        }
+                    }
+                    log.warn("访问方法：{}", methodName);
+                    throw new BusinessException(ErrorEnum.USER_NO_PERMISSION);
+                }
+            }
+        }
+        log.warn("访问方法：{}", methodName);
+        throw new BusinessException(ErrorEnum.USER_NO_PERMISSION);
+    }
 
 }

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 根据key移除缓存
  * 
- * @author lc
+ * @author maruko
  * @date 2019年1月4日
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -31,7 +31,7 @@ public @interface RemoveCache {
 	 * <b>为添加PutCache注解的方法名称</b>
 	 * </p>
 	 * <p>
-	 * <b style="color:red;">前提条件必须要和PutCahe的那个方法在同一个类中</b>
+	 * <b style="color:red;">前提条件必须要和PutCache的那个方法在同一个类中</b>
 	 * </p>
 	 * 
 	 * @return
