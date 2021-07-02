@@ -1,0 +1,109 @@
+# server 配置
+server:
+  servlet:
+    context-path: /
+  port: 60101
+  tomcat:
+    uri-encoding: UTF-8
+    # 加大tomcat最大连接数, 这里给400
+    accept-count: 500
+    max-threads: 500
+    max-connections: 500
+
+spring:
+  application:
+    name: system-web
+  redis:
+    database: 0
+    #host: 150.103.73.215
+    #port: 6379
+    password: '!123@password'
+    timeout: 15000
+    encode: UTF-8
+    block-when-exhausted: true
+    lettuce:
+      pool:
+        # 最大活跃链接数 默认8
+        max-active: 20
+        # 最大空闲连接数 默认8
+        max-idle: 8
+        # 最小空闲连接数 默认0
+        min-idle: 1
+        max-wait: 15000
+
+fbs:
+  shiro:
+    # 是否免密
+    noPassword: false
+    # 权限检查是否生效
+    enabled: true
+    # shiro redis缓存时长，默认1800秒
+    expireIn: 1800
+    # session 超时时间，默认1800000毫秒
+    sessionTimeout: 1800000
+    sessionTimeoutClean: 120000
+    # rememberMe cookie有效时长，默认30天
+    cookieTimeout: 2592000
+    # 免认证的路径配置，如静态资源，druid监控页面，注册页面，验证码请求等
+    anonUrl: '/css/**,/js/**,/fonts/**,/adminres/**,/img/**,/auth/**,/swagger**,captcha.jpg'
+    #设置认证的路径配置
+    authcUrl: '/user/**,/menu/**,/office/**,/role/**'
+    # 登录 url
+    loginUrl: /auth/login
+    # 登录成功后跳转的 url
+    successUrl: /admin/index
+    # 登出 url
+    logoutUrl: /auth/logout
+    # 未授权跳转 url
+    unauthorizedUrl: /403
+    # session的id名称
+    sessionIdName: sf.session.id
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:123456@${eureka.instance.hostname}:60011/eureka/
+  instance:
+    appname: ${spring.application.name}
+    virtualHostName: ${spring.application.name}
+    secureVirtualHostName: ${spring.application.name}
+    hostname: ${spring.cloud.client.ip-address}
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.hostname}:${server.port}
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: false
+
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 40000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+web:
+  cors:
+    allowed: http://86.100.13.22,http://10.7.2.120

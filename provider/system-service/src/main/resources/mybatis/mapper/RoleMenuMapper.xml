@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.RoleMenuMapper">
+    <insert id="insert" useGeneratedKeys="false" >
+        INSERT INTO sys_role_menu
+        (role_id,menu_id)
+        <if test="menuIds != null and menuIds.size>0">
+            <foreach collection="menuIds" item="item" separator="UNION ALL">
+                select
+                #{roleId},
+                #{item}
+                from dual
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteMenuFromRole">
+        DELETE FROM
+        sys_role_menu
+        WHERE role_id=
+        #{roleId}
+    </delete>
+
+    <select id="getByRoleId" resultType="com.hcf.nszh.provider.system.entity.RoleMenuEntity">
+        SELECT role_id,menu_id
+        FROM sys_role_menu
+        WHERE role_id=#{roleId}
+    </select>
+</mapper>

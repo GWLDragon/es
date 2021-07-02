@@ -1,0 +1,151 @@
+# server 配置
+server:
+  servlet:
+    context-path: /
+  port: 60201
+  tomcat:
+    uri-encoding: UTF-8
+    # 加大tomcat最大连接数, 这里给400
+    accept-count: 500
+    max-threads: 500
+    max-connections: 500
+
+spring:
+  application:
+    name: system-service
+  #数据库配置
+  datasource:
+    druid:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: oracle.jdbc.OracleDriver
+      jdbcUrl: jdbc:oracle:thin:@150.100.16.127:1521/dsjzt
+      username: dsjzt_com
+      password: dsjzt_5$%DaT^
+      initialSize: 10
+      minIdle: 10
+      maxActive: 100
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+      druidUserName: admin
+      druidPassword: 123456
+  redis:
+    database: 0
+    host: 150.100.16.127
+    port: 6379
+    password: '!123@password'
+    timeout: 15000
+    encode: UTF-8
+    block-when-exhausted: true
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 8
+        min-idle: 1
+        max-wait: 5000ms
+
+fbs:
+  shiro:
+    # 是否免密
+    noPassword: false
+    # 权限检查是否生效
+    enabled: true
+    # shiro redis缓存时长，默认1800秒
+    expireIn: 1800
+    # session 超时时间，默认1800000毫秒
+    sessionTimeout: 1800000
+    sessionTimeoutClean: 120000
+    # rememberMe cookie有效时长，默认30天
+    cookieTimeout: 2592000
+    # 免认证的路径配置，如静态资源，druid监控页面，注册页面，验证码请求等
+    anonUrl: '/css/**,/js/**,/fonts/**,/adminres/**,/img/**,/auth/**,/swagger**'
+    #设置认证的路径配置
+    authcUrl: '/menu/**,/office/**,/role/**'
+    # 登录 url
+    loginUrl: /auth/login
+    # 登录成功后跳转的 url
+    successUrl: /admin/index
+    # 登出 url
+    logoutUrl: /auth/logout
+    # 未授权跳转 url
+    unauthorizedUrl: /403
+    # session的id名称
+    sessionIdName: sf.session.id
+
+mybatis-plus:
+  #config-location: classpath:mybatis/config/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.hcf.ssqb.provider.system.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    #banner: true
+    #刷新mapper 调试神器
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      #id-type: id_worker
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+      field-strategy: not-empty
+      #驼峰下划线转换
+      column-underline: true
+      #数据库大写下划线转换
+      #capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: Y
+      logic-not-delete-value: N
+    refresh: true
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:123456@${eureka.instance.hostname}:60011/eureka/
+  instance:
+    appname: ${spring.application.name}
+    virtualHostName: ${spring.application.name}
+    secureVirtualHostName: ${spring.application.name}
+    hostname: ${spring.cloud.client.ip-address}
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.hostname}:${server.port}
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: false
+
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 9000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    com.hcf.nszh.provider.system.mapper: DEBUG

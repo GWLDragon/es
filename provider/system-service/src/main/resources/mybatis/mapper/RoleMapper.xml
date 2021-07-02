@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.RoleMapper">
+
+    <resultMap id="roleResult" type="com.hcf.nszh.provider.system.entity.RoleEntity">
+        <id property="roleId" column="id"/>
+        <result property="name" column="name"/>
+        <result property="enname" column="enname"/>
+        <result property="roleType" column="roleType"/>
+        <result property="dataScope" column="dataScope"/>
+        <result property="remarks" column="remarks"/>
+        <result property="useable" column="useable"/>
+
+    </resultMap>
+
+    <sql id="roleColumns">
+        a.role_id,
+        a.name,
+        a.enname,
+        a.role_type AS roleType,
+        a.data_scope AS dataScope,
+        a.remarks,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.useable AS useable,
+        a.is_sys AS sysData
+    </sql>
+
+    <sql id="tb">`sys_role`</sql>
+
+    <select id="get" resultMap="roleResult">
+        SELECT
+        <include refid="roleColumns"/>
+        rm.menu_id AS "menuList.id"
+        FROM sys_role a
+        LEFT JOIN sys_role_menu rm ON rm.role_id = a.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getByName" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        WHERE a.name = #{name} AND a.del_flag = 0
+        <if test="roleId != null and roleId != ''">
+            and  a.role_id != #{roleId}
+        </if>
+    </select>
+
+    <select id="getExistByEnname" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        WHERE a.enname = #{enname} AND a.del_flag = 0
+        <if test="roleId != null and roleId != ''">
+            and  a.role_id != #{roleId}
+        </if>
+    </select>
+
+    <select id="getByEnname" resultType="com.hcf.nszh.provider.system.entity.RoleEntity">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        JOIN sys_office o ON o.id = a.office_id
+        WHERE a.enname = #{enname} AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+
+    <select id="getRoleById" parameterType="String" resultType="com.hcf.nszh.provider.system.entity.RoleEntity">
+		SELECT
+		a.name
+		FROM sys_role a
+		WHERE a.role_id=#{id} AND a.del_flag = '0'
+	</select>
+
+    <select id="findList" resultMap="roleResult">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        LEFT JOIN sys_user_role ur ON ur.role_id = a.role_id
+        LEFT JOIN sys_user u ON u.user_id = ur.user_id
+        WHERE a.del_flag = #{delFlag} AND a.useable=#{useable}
+        <if test="userId != null and userId != ''">
+            AND u.user_id = #{userId}
+        </if>
+        <if test="loginName != null and loginName != ''">
+            AND u.login_name = #{loginName}
+        </if>
+        <!-- 数据范围过滤 -->
+        ORDER BY  a.update_date desc
+    </select>
+
+
+    <select id="selectRoleNameById" resultType="com.hcf.nszh.provider.system.entity.RoleEntity">
+		select id,name from sys_role
+		where id in (select role_id from sys_user_role where user_id=#{id})
+		and del_flag = 0
+	</select>
+
+    <select id="getByRoleId" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        SELECT
+		a.role_id,
+		 a.name,
+		 a.enname,
+		 a.role_type,
+		 a.data_scope,
+		 a.useable,
+		 a.remarks
+		FROM sys_role a
+		WHERE a.del_flag='0'
+		AND a.role_id = #{id}
+	</select>
+
+    <select id="findAllList" resultType="com.hcf.nszh.provider.system.entity.RoleEntity">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        ORDER BY  a.update_date desc
+    </select>
+
+    <update id="update" parameterType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        UPDATE sys_role SET
+        name = #{name},
+        enname = #{enname},
+        role_type = #{roleType},
+        data_scope = #{dataScope},
+        update_by = #{updateBy},
+        update_date = #{updateDate},
+        remarks = #{remarks},
+        is_sys = #{sysData},
+        useable =#{useable}
+        WHERE role_id = #{roleId}
+    </update>
+
+    <delete id="deleteRoleMenu">
+		DELETE FROM sys_role_menu WHERE role_id = #{id}
+	</delete>
+
+    <insert id="insertRoleMenu">
+        INSERT INTO sys_role_menu(role_id, menu_id)
+        <foreach collection="menuList" item="menu" separator=" union all ">
+            SELECT #{id}, #{menu.id}
+            <if test="dbName != 'mssql'">
+                FROM dual
+            </if>
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleOffice">
+		DELETE FROM sys_role_office WHERE role_id = #{id}
+	</delete>
+
+    <insert id="insertRoleOffice">
+        INSERT INTO sys_role_office(role_id, office_id)
+        <foreach collection="officeList" item="office" separator=" union all ">
+            SELECT #{id}, #{office.id}
+            <if test="dbName != 'mssql'">
+                FROM dual
+            </if>
+        </foreach>
+    </insert>
+
+    <update id="delete">
+		UPDATE sys_role SET
+			del_flag = '1'
+		WHERE role_id = #{id}
+	</update>
+
+
+    <delete id="deleteById">
+        DELETE FROM sys_role
+        WHERE id = #{id}
+    </delete>
+
+    <select id="getRoleByEnname" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM sys_role a
+        WHERE a.enname = #{enname} and del_flag='0'
+    </select>
+
+    <select id="listRole" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+        SELECT
+        a.role_id,
+        a.name,
+        a.enname,
+        a.role_type,
+        a.data_scope,
+        a.useable,
+        a.remarks
+        FROM sys_role a
+        WHERE a.del_flag='0'
+        <if test="search != null and search != ''">
+            and (a.name like CONCAT(CONCAT('%',#{search}),'%') or a.enname like CONCAT(CONCAT('%',#{search}),'%'))
+        </if>
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="listPageRole" resultType="com.hcf.nszh.provider.system.entity.RoleEntity">
+        SELECT
+        <include refid="roleColumns"/>
+        FROM
+        <include refid="tb"/>
+        WHERE a.del_flag = '0'
+    </select>
+
+    <select id="searchRole" resultType="com.hcf.nszh.provider.system.api.vo.RoleDetailVO">
+		SELECT
+		a.role_id,
+		 a.name,
+		 a.enname,
+		 a.role_type,
+		 a.data_scope,
+		 a.useable,
+		 a.remarks
+		FROM sys_role a
+		WHERE a.del_flag='0'
+		AND name LIKE CONCAT('%',#{condition},'%')
+	</select>
+    <select id="getAutoCode" resultType="java.lang.String">
+    SELECT enname from sys_role where (enname REGEXP '[^0-9.]')=0 and del_flag='0' and LENGTH(enname) = 10 ORDER BY enname desc limit 1
+    </select>
+</mapper>

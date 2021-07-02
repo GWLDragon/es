@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.OfficeMapper">
+
+	<sql id="officeColumns">
+		a.id,
+		a.parent_id,
+		a.parent_ids,
+		a.area_id,
+		a.code,
+		a.name,
+		a.sort,
+		a.type,
+		a.grade,
+		a.address,
+		a.zip_code,
+		a.master,
+		a.phone,
+		a.fax,
+		a.email,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+		a.useable AS useable,
+		a.primary_person AS "primaryPerson.id",
+		a.deputy_person AS "deputyPerson.id",
+		p.name AS "parent.name"
+	</sql>
+
+	<sql id="officeOfUserColumns">
+		a.id,
+		a.parent_id ,
+		a.code,
+		a.name,
+		a.grade,
+		a.del_flag,
+		u.user_id,
+		u.login_name,
+		u.name as userName
+	</sql>
+
+	<sql id="officeJoins">
+		LEFT JOIN sys_office p ON p.id = a.parent_id
+	</sql>
+
+	<select id="findList" resultType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		OR a.id = #{currentUser.office.id}
+		ORDER BY a.code
+	</select>
+
+	<select id="findByParentIdsLike" resultType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.del_flag = 0
+		<if test="parentIds !=null and  parentIds != ''">
+			AND a.parent_ids LIKE #{parentIds}
+		</if>
+		ORDER BY a.code
+	</select>
+
+	<update id="update">
+		UPDATE sys_office SET
+			parent_id = #{parentId},
+			parent_ids = #{parentIds},
+			area_id = #{areaId},
+			code = #{code},
+			name = #{name},
+			type = #{type},
+			grade = #{grade},
+			address = #{address},
+			zip_code = #{zipCode},
+			master = #{master},
+			phone = #{phone},
+			fax = #{fax},
+			email = #{email},
+			update_by = #{updateBy},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			useable=#{useable},
+			primary_person=#{primaryPerson},
+			deputy_person=#{deputyPerson}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateParentIds">
+		UPDATE sys_office SET
+			parent_id = #{parentId},
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById">
+		UPDATE sys_office SET
+			del_flag = '1'
+		WHERE id = #{officeId}
+	</update>
+
+	<select id="findByChildOffice" resultType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.del_flag = 0
+		<if test="id != null and id != ''">
+			AND (a.parent_id = #{id} or a.id = #{id})
+		</if>
+		ORDER BY a.sort
+	</select>
+
+	<select id="findParentOffice" resultType="java.lang.String">
+		select id from sys_office where del_flag = 0 and (parent_ids like concat(CONCAT('%',#{id}),'%')  or id = #{id})
+	</select>
+
+	<select id="findOfficeByCode" resultType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		SELECT
+		*
+		FROM sys_office a
+		WHERE code = #{code} and a.del_flag = 0
+		ORDER BY a.sort
+	</select>
+
+	<resultMap id="officeTreeResultMap" type="com.hcf.nszh.provider.system.api.vo.OfficeVo">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="area_id" property="areaId"/>
+		<collection column="{parentId=id}" ofType="com.hcf.nszh.provider.system.api.vo.OfficeVo" property="children" select="getOfficeByParentId"/>
+	</resultMap>
+
+	<select id="listRootOffice"  resultMap="officeTreeResultMap">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.parent_id = '0' AND a.del_flag='0'
+	</select>
+
+	<select id="getOfficeByParentId" resultMap="officeTreeResultMap">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.parent_id=#{parentId} AND a.del_flag='0'
+	</select>
+
+	<!--没有某角色的用户-->
+	<resultMap id="officeOfUserTreeResultMap" type="com.hcf.nszh.provider.system.api.vo.OfficeOfUserVo">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="roleId" property="roleId"/>
+		<collection property="userBaseVos" ofType="com.hcf.nszh.provider.system.api.vo.UserBaseVo">
+			<id column="user_id" property="userId" />
+			<result column="userName" property="name" />
+			<result column="login_name" property="loginName"/>
+		</collection>
+		<collection column="{parentId=id,roleId=roleId}" ofType="com.hcf.nszh.provider.system.api.vo.OfficeOfUserVo" property="children" select="getOfficeOfUserByParentId"/>
+	</resultMap>
+
+	<select id="officeOfUser"  resultMap="officeOfUserTreeResultMap">
+		select  * from (
+		SELECT
+		<include refid="officeOfUserColumns"/>,#{roleId} as roleId,
+		(SELECT id from sys_office where parent_id = a.id  and del_flag = 0 and rownum &lt;=1) as childrenId
+		FROM sys_office a left join
+		( SELECT * from sys_user  where del_flag='0'
+		<if test="roleId != null and roleId != ''">
+			and user_id not in (select user_id from sys_user_role where role_id = #{roleId} )
+		</if>
+		) u
+		on a.id = u.office_id  WHERE a.parent_id = '0' AND a.del_flag='0') m
+		where m.childrenId is not null or m.user_id is not null
+	</select>
+
+	<select id="getOfficeOfUserByParentId" resultMap="officeOfUserTreeResultMap">
+		select  * from (
+		SELECT
+		<include refid="officeOfUserColumns"/>,#{roleId} as roleId,
+		(SELECT id from sys_office where parent_id = a.id and del_flag = 0 and rownum &lt;= 1) as childrenId
+		FROM sys_office a left join
+		( SELECT * from sys_user  where del_flag='0'
+		<if test="roleId != null and roleId != ''">
+			and user_id not in (select user_id from sys_user_role where role_id = #{roleId} )
+		</if>
+		) u
+		on a.id = u.office_id  WHERE a.parent_id = #{parentId} AND a.del_flag='0' ) m
+		where m.childrenId is not null or m.user_id is not null
+	</select>
+
+	<select id="getOfficeById" resultMap="officeTreeResultMap">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		LEFT JOIN sys_office p ON p.id = a.parent_id
+		WHERE a.id=#{officeId}
+		AND a.del_flag='0'
+	</select>
+
+
+	<select id="searchOffice" resultMap="officeTreeResultMap">
+		SELECT
+		<include refid="officeColumns"/>
+		FROM sys_office a
+		<include refid="officeJoins"/>
+		WHERE a.del_flag='0'
+		AND (
+		a.name LIKE CONCAT(CONCAT('%',#{searchOfficeDTO.searchCondition}),'%')
+		OR
+		a.code LIKE CONCAT(CONCAT('%',#{searchOfficeDTO.searchCondition}),'%'))
+	</select>
+
+	<!--查询某机构下的所有机构ID,此方法适用于可以将id排序的，这里是随机的字符串，不适用-->
+	<select id="getChildIds" resultType="java.lang.String">
+		select id from (
+		select t1.id,
+		if(find_in_set(parent_id, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+		from (
+		select id,parent_id from sys_office t where t.del_flag = 0 order by parent_id, id
+		) t1,
+		(select @pids := #{officeId}) t2
+		) t3 where ischild != 0
+	</select>
+	<!--查询某机构下的所有机构ID,此方法适用与id为字符串的，使用此方法需要先创建一个函数-->
+	<!--函数方法
+		CREATE FUNCTION `getOfficeChildList`(rootId varchar(100))
+		RETURNS varchar(1000)
+		BEGIN
+		DECLARE sChildList VARCHAR(1000);
+		DECLARE sChildTemp VARCHAR(1000);
+		SET sChildTemp =cast(rootId as CHAR);
+		WHILE sChildTemp is not null DO
+		IF (sChildList is not null) THEN
+		SET sChildList = concat(sChildList,',',sChildTemp);
+		ELSE
+		SET sChildList = concat(sChildTemp);
+		END IF;
+		SELECT group_concat(id) INTO sChildTemp FROM sys_office where del_flag = 0 and  FIND_IN_SET(parent_id,sChildTemp)>0;
+		END WHILE;
+		RETURN sChildList;
+		END;-->
+	<select id="getOfficeChildIds" resultType="java.lang.String">
+	select id
+	from sys_office r
+	where FIND_IN_SET(r.id,(select `getOfficeChildList`(#{officeId}) as id))
+	</select>
+	<resultMap id="getAddressBookMap" type="com.hcf.nszh.provider.system.api.vo.AddressBookVo">
+		<id column="user_id" property="userId"/>
+		<result column="name" property="name"/>
+		<result column="phone" property="phone"/>
+		<result column="office_id" property="officeId"/>
+		<result column="OfficeName" property="OfficeName"/>
+		<collection property="roleNames" ofType="java.lang.String" javaType="java.util.List">
+			<result column="roleName"/>
+		</collection>
+	</resultMap>
+
+	<select id="getAddressBook"  resultMap="getAddressBookMap">
+		SELECT  a.user_id,a.`name`,a.phone,c.name roleName ,d.name OfficeName,a.office_id  from sys_user a
+		LEFT JOIN  sys_user_role b ON  a.user_id = b.user_id LEFT JOIN
+		(SELECT * from sys_role where del_flag =0) c on b.role_id= c.role_id
+		LEFT JOIN sys_office d on a.office_id = d.id
+		where   a.del_flag = '0'   and d.del_flag = '0'
+		<if test="officeIds != null and officeIds.size > 0">
+			and a.office_id in
+			<foreach collection="officeIds" open="(" close=")" item="item" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="search != null and search != ''">
+			and a.name like concat(CONCAT('%',#{search}),'%')
+		</if>
+		<if test="roleCode != null and roleCode != ''">
+			and c.enname = #{roleCode}
+		</if>
+	</select>
+
+	<select id="getAddressBookByUserId"  resultMap="getAddressBookMap">
+		SELECT  a.user_id,a.`name`,a.phone,c.name roleName ,d.name OfficeName,a.office_id  from sys_user a
+		LEFT JOIN  sys_user_role b ON  a.user_id = b.user_id LEFT JOIN
+		(SELECT * from sys_role where del_flag =0) c on b.role_id= c.role_id
+		LEFT JOIN sys_office d on a.office_id = d.id
+		where   a.del_flag = '0'   and d.del_flag = '0'
+		<if test="userIds != null and userIds.size > 0">
+			and a.user_id in
+			<foreach collection="userIds" open="(" close=")" item="item" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getAddressBookCount"  resultType="java.lang.Integer">
+		SELECT  count(1)  from sys_user a
+		LEFT JOIN sys_office d on a.office_id = d.id
+		where   a.del_flag = 0   and d.del_flag = 0
+		<if test="officeIds != null and officeIds.size > 0">
+			and a.office_id in
+			<foreach collection="officeIds" open="(" close=")" item="item" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="search != null and search != ''">
+			and a.name like concat(CONCAT('%',#{search}),'%')
+		</if>
+	</select>
+
+	<select id="getOfficeByIds"  resultType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		SELECT a.id,a.parent_id,a.parent_ids,a.area_id,a.code,a.name,a.sort,a.type,a.grade,a.address,
+		a.zip_code,a.master,a.phone,a.fax,a.email,a.remarks
+		from sys_office a
+		where   a.del_flag = '0'
+		<if test="officeIds != null and officeIds.size > 0">
+			and a.id in
+			<foreach collection="officeIds" open="(" close=")" item="item" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getOfficeIdByParentId" resultType="java.lang.String">
+		SELECT id
+		FROM sys_office a
+		WHERE a.parent_id='0' AND a.del_flag='0'
+	</select>
+
+	<select id="getRootOfficeMsg" resultType="com.hcf.nszh.provider.system.api.vo.OfficeVo">
+		SELECT id,name,code
+		FROM sys_office a
+		WHERE a.parent_id='0' AND a.del_flag='0'
+	</select>
+
+	<select id="getOfficeIsExistByName" resultType="com.hcf.nszh.provider.system.api.vo.OfficeVo">
+		SELECT
+		a.id,a.parent_id,a.parent_ids,a.code,a.name,a.sort,a.grade,a.address,
+		a.zip_code,a.master,a.phone,a.fax,a.email,a.remarks
+		FROM sys_office a
+		WHERE del_flag='0'
+		and parent_id = #{parentId}
+		<if test="name != null and name != ''">
+			and name = #{name}
+		</if>
+		<if test="code != null and code != ''">
+			and code = #{code}
+		</if>
+		<if test="id != null and id != ''">
+			and id != #{id}
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.hcf.nszh.provider.system.entity.OfficeEntity">
+		update sys_office
+		<set>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="parentIds != null">
+				parent_ids = #{parentIds,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="areaId != null">
+				area_id = #{areaId,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=CHAR},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=CHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="zipCode != null">
+				zip_code = #{zipCode,jdbcType=VARCHAR},
+			</if>
+			<if test="master != null">
+				master = #{master,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="useable != null">
+				USEABLE = #{useable,jdbcType=VARCHAR},
+			</if>
+			<if test="primaryPerson != null">
+				PRIMARY_PERSON = #{primaryPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="deputyPerson != null">
+				DEPUTY_PERSON = #{deputyPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null">
+				del_flag = #{delFlag,jdbcType=CHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

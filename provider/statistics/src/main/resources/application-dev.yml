@@ -1,0 +1,183 @@
+# server 配置
+server:
+  servlet:
+    context-path: /
+  port: 8086
+  tomcat:
+    uri-encoding: UTF-8
+    # 加大tomcat最大连接数, 这里给400
+    accept-count: 500
+    max-threads: 500
+    max-connections: 500
+
+spring:
+  #数据库配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    dynamic:
+      primary: oracle #设置默认数据源
+      strict: true # 设置严格模式，默认false，不启动
+      datasource:
+        oracle:
+          url: jdbc:oracle:thin:@172.16.121.219:1521:ORCL
+          username: nfdp
+          password: 123456
+          driver-class-name: oracle.jdbc.OracleDriver
+          initialSize: 5
+          minIdle: 5
+          maxActive: 20
+          maxWait: 60000
+          timeBetweenEvictionRunsMillis: 60000
+          minEvictableIdleTimeMillis: 300000      # 配置一个连接在池中最小生存的时间，单位是毫秒
+          poolPreparedStatements: true
+          maxPoolPreparedStatementPerConnectionSize: 20
+        mysql:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3307/courttax?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&allowMultiQueries=true&useSSL=false
+          username: root
+          password: 123456
+          initialSize: 5
+          minIdle: 5
+          maxActive: 20
+          maxWait: 60000
+          timeBetweenEvictionRunsMillis: 60000
+          minEvictableIdleTimeMillis: 300000      # 配置一个连接在池中最小生存的时间，单位是毫秒
+          poolPreparedStatements: true
+          maxPoolPreparedStatementPerConnectionSize: 20
+
+  main:
+    allow-bean-definition-overriding: true
+
+  redis:
+    database: 0
+    host: 172.16.121.219
+    port: 6379
+    password: 123456
+    timeout: 15000ms
+    encode: UTF-8
+    block-when-exhausted: true
+    lettuce:
+      pool:
+        # 最大活跃链接数 默认8
+        max-active: 20
+        # 最大空闲连接数 默认8
+        max-idle: 8
+        # 最小空闲连接数 默认0
+        min-idle: 1
+        max-wait: 5000ms
+
+fbs:
+  shiro:
+    # 是否免密
+    noPassword: false
+    # 权限检查是否生效
+    enabled: true
+    # shiro redis缓存时长，默认1800秒
+    expireIn: 1800
+    # session 超时时间，默认1800000毫秒
+    sessionTimeout: 1800000
+    sessionTimeoutClean: 120000
+    # rememberMe cookie有效时长，默认30天
+    cookieTimeout: 2592000
+    # 免认证的路径配置，如静态资源，druid监控页面，注册页面，验证码请求等
+    anonUrl: '/css/**,/js/**,/fonts/**,/adminres/**,/img/**,/auth/**,/swagger**'
+    #设置认证的路径配置
+    authcUrl: '/menu/**,/office/**,/role/**'
+    # 登录 url
+    loginUrl: /auth/login
+    # 登录成功后跳转的 url
+    successUrl: /admin/index
+    # 登出 url
+    logoutUrl: /auth/logout
+    # 未授权跳转 url
+    unauthorizedUrl: /403
+    # session的id名称
+    sessionIdName: sf.session.id
+
+mybatis-plus:
+  #config-location: classpath:mybatis/config/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.hcf.ssqb.provider.mz.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    #banner: true
+    #刷新mapper 调试神器
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      #id-type: id_worker
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+      field-strategy: not-empty
+      #驼峰下划线转换
+      column-underline: true
+      #数据库大写下划线转换
+      capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: Y
+      logic-not-delete-value: N
+    refresh: true
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:123456@${eureka.instance.hostname}:60011/eureka/
+  instance:
+    appname: ${spring.application.name}
+    virtualHostName: ${spring.application.name}
+    secureVirtualHostName: ${spring.application.name}
+    hostname: ${spring.cloud.client.ip-address}
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${eureka.instance.hostname}:${server.port}
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: false
+
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 9000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    com.hcf.nszh.provider.mz.mapper: debug
+    org.springframework.jdbc: debug
+
+minio:
+  url: http://172.16.127.41:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket: maruko
+
+#elasticsearch配置
+elasticsearch:
+  rest:
+    #es节点地址，集群则用逗号隔开
+    uris: 127.0.0.1:9200

@@ -1,0 +1,34 @@
+
+###  发票实时监控  数据展示接口
+#POST http://localhost:60202/xssj/kpxx/2020
+
+###  发票实时监控  当日开票额度 TOP 10 接口
+#POST http://Localhost:60202/drkp/kpxx/2020/05/11
+
+###  区块链发票分析  数据显示接口
+#POST http://localhost:60202/qkl/kpxx/2020
+
+###  区块链发票分析   行业开票分布接口
+#POST http://localhost:60202/qkl/hykpfb/2020
+
+###  区块链发票分析  动态实时图 接口
+#GET http://localhost:60202/qkl/dtsst
+
+#发票实时监控 市局开票购票区块链信息
+#GET http://localhost:60202/fpssjk/sjkpgpqklxx
+
+#发票实时监控 区局开票购票区块链信息
+#GET http://localhost:60202/fpssjk/qjkpgpqklxx
+
+#POST http://localhost:60202/fplxfx/xxsppm/2019
+###
+
+#POST http://localhost:8086/cyljkfx/hykpfb/2020/440300/0
+
+###
+
+POST http://localhost:8086/cyyqfx/hyfb/1/100/440300/2020
+
+
+#POST  http://localhost:8086/fpssjk/ssldt
+###

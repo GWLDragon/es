@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.MenuMapper">
+
+	<sql id="menuColumns">
+		a.id,
+		a.parent_id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.name,
+		a.href,
+		a.target,
+		a.icon,
+		a.sort,
+		a.is_show,
+		a.permission,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+		p.name AS "parent.name"
+	</sql>
+
+	<sql id="menuJoins">
+		LEFT JOIN sys_menu p ON p.id = a.parent_id
+    </sql>
+
+	<select id="get" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!-- 	<select id="get" resultType="Menu">
+            SELECT
+                *
+            FROM sys_menu a
+            WHERE a.id = #{id}
+        </select> -->
+
+	<select id="findAllList" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE a.del_flag = '0'
+		ORDER BY a.sort
+	</select>
+
+	<select id="findByParentIdsLike" resultType="com.hcf.nszh.provider.system.api.vo.OperatorMenuVo">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM sys_menu a
+		WHERE a.del_flag = 0 AND a.parent_ids LIKE #{parentIds}
+		ORDER BY a.sort
+	</select>
+
+	<select id="findByUserId" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT DISTINCT
+		<include refid="menuColumns"/>
+		FROM sys_menu a
+		LEFT JOIN sys_menu p ON p.id = a.parent_id
+		JOIN sys_role_menu rm ON rm.menu_id = a.id
+		JOIN sys_role r ON r.role_id = rm.role_id AND r.useable='1'
+		JOIN sys_user_role ur ON ur.role_id = r.role_id
+		JOIN sys_user u ON u.user_id = ur.user_id AND u.user_id = #{userId}
+		WHERE a.del_flag = #{delFlag} AND r.del_flag = #{delFlag} AND u.del_flag = #{delFlag}
+		ORDER BY a.sort
+	</select>
+
+
+	<update id="update" parameterType="com.hcf.nszh.provider.system.api.vo.OperatorMenuVo">
+		UPDATE sys_menu SET 
+			parent_id = #{parentId},
+			parent_ids = #{parentIds},
+			name = #{name},
+			href = #{href},
+			target = #{target},
+			icon = #{icon},
+			sort = #{sort},
+			is_show = #{isShow},
+			permission = #{permission},
+			update_by = #{updateBy},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateParentIds">
+		UPDATE sys_menu SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		update sys_menu
+		<set>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="parentIds != null">
+				parent_ids = #{parentIds,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="href != null">
+				href = #{href,jdbcType=VARCHAR},
+			</if>
+			<if test="target != null">
+				target = #{target,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				icon = #{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="isShow != null">
+				is_show = #{isShow,jdbcType=CHAR},
+			</if>
+			<if test="permission != null">
+				permission = #{permission,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remarks != null">
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null">
+				del_flag = #{delFlag,jdbcType=CHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<update id="delete">
+		UPDATE sys_menu SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+		<if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+
+	<update id="deleteById">
+		UPDATE sys_menu SET
+			del_flag='1'
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectRootMenu" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		select 		
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.name,
+		a.href,
+		a.target,
+		a.icon,
+		a.sort,
+		a.is_show,
+		a.permission,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date
+		FROM sys_menu a
+		WHERE a.parent_id = '0' and a.del_flag=0
+	</select>
+
+	<select id="selectParentMenu" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		select
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.name,
+		a.href,
+		a.target,
+		a.icon,
+		a.sort,
+		a.is_show,
+		a.permission,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date
+		FROM sys_menu a
+		WHERE id in (
+		<foreach collection="parentIds" item="item" separator=",">
+			<if test="item != null and item !=''">
+				#{item}
+			</if>
+		</foreach>
+		)
+		and a.del_flag=0
+		order by a.sort
+	</select>
+
+	<select id="selectAMenu" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		select 		
+		a.id,
+		a.parent_id AS "parent.id",
+		a.parent_ids,
+		a.name,
+		a.href,
+		a.target,
+		a.icon,
+		a.sort,
+		a.is_show,
+		a.permission,
+		a.remarks,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date
+		FROM sys_menu a
+		WHERE a.permission = "featureDepart:feature:updateNickName" and a.del_flag='0'
+	</select>
+
+	<select id="selectById" resultType="com.hcf.nszh.provider.system.api.vo.OperatorMenuVo" parameterType="String">
+		SELECT
+		id,
+		name,
+		parent_id,
+		parent_ids,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE id=#{id} AND del_flag='0'
+	</select>
+
+	<select id="listMenu" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		name,
+		parent_ids,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE del_flag='0'
+	</select>
+
+	<select id="getMenu" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		id,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE del_flag='0'
+	</select>
+
+	<select id="listMenus" resultType="com.hcf.nszh.provider.system.api.dto.OperatorMenuDto">
+		SELECT
+		a.id,
+		a.parent_id,
+		a.parent_ids,
+		a.name,
+		a.sort,
+		a.href,
+		a.target,
+		a.icon,
+		a.remarks,
+		a.is_show,
+		a.permission
+		FROM sys_menu a
+		WHERE a.del_flag='0'
+	</select>
+
+	<select id="listByIds" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		a.id,
+		a.parent_id,
+		a.parent_ids,
+		a.name,
+		a.sort,
+		a.href,
+		a.target,
+		a.icon,
+		a.remarks,
+		a.is_show,
+		a.permission
+		FROM sys_menu a
+		WHERE a.del_flag=0 AND a.id IN (<foreach collection="fieldNames" index="index" item="item" separator=",">
+		${item}</foreach>)
+	</select>
+
+	<select id="getMenuIsExistByName" resultType="com.hcf.nszh.provider.system.entity.MenuEntity">
+		SELECT
+		name,
+		parent_ids,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE del_flag='0' and name = #{name} and parent_id = #{parentId}
+		<if test="id != null and id != ''">
+			and id != #{id}
+		</if>
+	</select>
+
+
+	<update id="updateSort" parameterType="com.hcf.nszh.provider.system.api.vo.MenuVo">
+		UPDATE sys_menu SET
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+
+	<resultMap id="menuTreeResultMap" type="com.hcf.nszh.provider.system.api.vo.MenuVo">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="parent_id" property="parentId"/>
+		<collection column="{parentId=id}" ofType="com.hcf.nszh.provider.system.api.vo.MenuVo"
+					property="children" select="getMenuByParentId"/>
+	</resultMap>
+
+	<select id="listRootMenu" resultMap="menuTreeResultMap">
+		SELECT
+		id,
+		name,
+		parent_id,
+		href,
+		sort,
+		is_show,
+		permission,
+		icon,remarks
+		FROM sys_menu
+		WHERE parent_id = '0' AND del_flag='0' order by sort asc
+	</select>
+
+	<select id="getMenuByParentId" resultMap="menuTreeResultMap">
+		SELECT
+		id,
+		parent_id,
+		name,
+		href,
+		sort,
+		is_show,
+		permission,
+		icon,remarks
+		FROM sys_menu
+		WHERE parent_id=#{parentId} AND del_flag='0' order by sort asc
+	</select>
+
+	<select id="getMenuchildrenByParentId" resultMap="menuTreeResultMap">
+		SELECT
+		id,
+		parent_id,
+		name,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE parent_id=#{parentId} AND del_flag='0'
+	</select>
+
+	<select id="getRootMenuById" resultMap="menuTreeResultMap">
+		SELECT
+		id,
+		name,
+		parent_id,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE id=#{menuId} AND del_flag='0'
+	</select>
+
+	<select id="getMenuByName" resultMap="menuTreeResultMap">
+		SELECT
+		id,
+		name,
+		parent_id,
+		href,
+		sort,
+		is_show,
+		permission
+		FROM sys_menu
+		WHERE name LIKE CONCAT(CONCAT('%',#{condition}),'%')
+		AND del_flag='0'
+	</select>
+
+	<select id="getMenuByRoleId" resultType="com.hcf.nszh.provider.system.api.vo.MenuVo">
+		SELECT
+		id,
+		name,
+		parent_id,
+		href,
+		sort from sys_menu where id in(
+		SELECT menu_id from sys_role_menu where role_id = #{roleId} ) and del_flag = 0
+	</select>
+
+
+
+</mapper>

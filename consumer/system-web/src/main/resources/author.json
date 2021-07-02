@@ -1,0 +1,6 @@
+[{
+	"/system/user": ["/menu/", "/role/", "/office/", "/user/"],
+	"/system/role": ["/menu/", "/role/", "/office/", "/user/"],
+	"/system/organization": ["/menu/", "/role/", "/office/", "/user/"],
+	"/system/menu": ["/menu/", "/role/", "/office/", "/user/"]
+}]

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.RoleUserMapper">
+    <insert id="insert">
+        INSERT INTO sys_user_role
+        (user_id,role_id)
+        VALUES
+        <if test="assignRoleDTO.userIds != null and assignRoleDTO.userIds.size>0">
+            <foreach collection="assignRoleDTO.userIds" item="item" separator=",">
+                (#{item}, #{assignRoleDTO.roleId})
+            </foreach>
+        </if>
+    </insert>
+    <delete id="delete">
+        DELETE FROM sys_user_role
+        WHERE role_id=#{roleId}
+    </delete>
+
+    <select id="selectByRoleIdAndUserId" resultType="com.hcf.nszh.provider.system.entity.RoleUserEntity">
+    SELECT user_id,role_id
+    FROM sys_user_role
+    WHERE user_id = #{userId}
+    AND role_id=#{roleId}
+</select>
+
+    <select id="selectByRoleId" resultType="com.hcf.nszh.provider.system.api.vo.RoleUserVO">
+        SELECT user_id,role_id
+        FROM sys_user_role
+        WHERE role_id=#{roleId}
+    </select>
+    <select id="selectByUserId" resultType="com.hcf.nszh.provider.system.api.vo.RoleUserVO">
+        SELECT user_id,role_id
+        FROM sys_user_role
+        WHERE user_id=#{userId}
+    </select>
+    <select id="getRoleUserPage" resultType="com.hcf.nszh.provider.system.api.vo.AssignedUserVO">
+        SELECT user_id,role_id
+        FROM sys_user_role
+    </select>
+    <select id="listAll" resultType="com.hcf.nszh.provider.system.entity.RoleUserEntity">
+        SELECT user_id,role_id
+        FROM sys_user_role
+    </select>
+
+    <select id="selectExistUserOfRole" resultType="java.lang.Long">
+        SELECT user_id
+        FROM sys_user_role
+        WHERE role_id=#{roleId} and  user_id in
+        <foreach collection="userIds" open="(" separator=","  close=")" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteByUserId">
+        DELETE FROM sys_user_role
+        WHERE user_id=#{userId}
+    </delete>
+    <delete id="deleteUserFromRole">
+        DELETE FROM sys_user_role
+        WHERE user_id=#{userId}
+        AND role_id=#{roleId}
+    </delete>
+</mapper>

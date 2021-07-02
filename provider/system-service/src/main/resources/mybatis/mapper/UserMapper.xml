@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcf.nszh.provider.system.mapper.UserMapper">
+
+    <resultMap id="userResult" type="com.hcf.nszh.provider.system.entity.UserEntity">
+        <id property="userId" column="id"/>
+        <result property="loginName" column="login_name"/>
+        <result property="officeId" column="office_id"/>
+        <result property="password" column="password"/>
+        <result property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="mobile" column="mobile"/>
+        <result property="userType" column="user_type"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="remarks" column="remarks"/>
+        <result property="loginFlag" column="loginFlag"/>
+        <result property="photo" column="photo"/>
+        <result property="sysSkin" column="sys_skin"/>
+    </resultMap>
+
+    <sql id="userColumn">
+        a.user_id,
+        a.office_id AS "office.id",
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag
+    </sql>
+
+    <sql id="userColumns">
+        a.user_id,
+        a.office_id AS "office.id",
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.skin,
+        a.sys_skin,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo,
+        a.create_by AS "createBy.id",
+        a.create_date,
+        a.update_by AS "updateBy.id",
+        a.update_date,
+        a.del_flag,
+        a.sys_skin,
+        o.name AS "office.name",
+        o.parent_id AS "office.parent.id",
+        o.parent_ids AS "office.parentIds",
+        oa.id AS "office.area.id",
+        oa.name AS "office.area.name",
+        oa.code as "office.area.code",
+        oa.parent_id AS "office.area.parent.id",
+        oa.parent_ids AS "office.area.parentIds",
+        ou.user_id AS "office.primaryPerson.id",
+        ou.name AS "office.primaryPerson.name",
+        ou2.user_id AS "office.deputyPerson.id",
+        ou2.name AS "office.deputyPerson.name"
+    </sql>
+
+    <sql id="userJoins">
+        LEFT JOIN sys_office c ON c.id = a.company_id
+        LEFT JOIN sys_area ca ON ca.id = c.area_id
+        LEFT JOIN sys_office o ON o.id = a.office_id
+        LEFT JOIN sys_area oa ON oa.id = o.area_id
+
+        LEFT JOIN sys_user cu ON cu.user_id = c.primary_person
+        LEFT JOIN sys_user cu2 ON cu2.user_id = c.deputy_person
+        LEFT JOIN sys_user ou ON ou.user_id = o.primary_person
+        LEFT JOIN sys_user ou2 ON ou2.user_id = o.deputy_person
+    </sql>
+
+    <!-- 根据编号获得用户 -->
+    <select id="get" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        <include refid="userColumns"/>
+        FROM sys_user a
+        <include refid="userJoins"/>
+        WHERE a.user_id = #{id}
+    </select>
+
+    <!-- 根据登录名查询用户 -->
+    <select id="getByLoginName" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        <include refid="userColumns"/>,
+        case when a.login_name = 'admin'  then 1 else 0 end as admin
+        FROM sys_user a
+        <include refid="userJoins"/>
+        WHERE a.login_name = #{loginName} and a.del_flag = 0
+    </select>
+
+    <select id="getUserByLoginName" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        <include refid="userColumn"/>
+        FROM sys_user a
+        WHERE a.login_name = #{loginName} and a.del_flag = 0
+        <if test="userId != null and userId !=''">
+            and user_id != #{userId}
+        </if>
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insert" useGeneratedKeys="true" keyColumn="user_id" keyProperty="userId">
+        INSERT INTO sys_user(
+        user_id,
+        office_id,
+        login_name,
+        password,
+        no,
+        name,
+        email,
+        phone,
+        mobile,
+        user_type,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks,
+        login_flag,
+        photo,
+        del_flag
+        ) VALUES (
+        #{userId},
+        #{officeId},
+        #{loginName},
+        #{password},
+        #{no},
+        #{name},
+        #{email},
+        #{phone},
+        #{mobile},
+        #{userType},
+        #{createUserId},
+        #{createTime},
+        #{updateUserId},
+        #{updateTime},
+        #{remarks},
+        #{loginFlag},
+        #{photo},
+        #{delFlag}
+        )
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUserById">
+        UPDATE sys_user SET
+        office_id = #{officeId},
+        login_name = #{loginName},
+        <if test="password !=null and password !=''">
+            password = #{password},
+        </if>
+        no = #{no},
+        name = #{name},
+        email = #{email},
+        phone = #{phone},
+        mobile = #{mobile},
+        user_type = #{userType},
+        update_date = #{updateTime},
+        update_by = #{updateUserId},
+        remarks = #{remarks},
+        <if test="photo !=null and photo !=''">
+            photo = #{photo},
+        </if>
+        login_flag = #{loginFlag}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 删除用户和角色关联表数据 -->
+    <delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{userId}
+	</delete>
+
+    <!-- 插入用户和角色关联表数据 -->
+    <insert id="insertUserRole">
+        INSERT INTO sys_user_role(user_id, role_id)
+        <foreach collection="roleIds" item="role" separator=" union all ">
+            SELECT #{userId}, #{role}
+            FROM dual
+        </foreach>
+    </insert>
+
+    <!-- 更新用户密码 -->
+    <update id="updatePasswordById" parameterType="com.hcf.nszh.provider.system.api.dto.UpdatePasswordDTO">
+		UPDATE sys_user SET
+			password = #{updatePasswordDTO.newPassword}
+		WHERE login_name = #{updatePasswordDTO.loginName}
+	</update>
+
+    <!--删除用户  -->
+    <delete id="deleteById">
+        DELETE FROM sys_user
+        WHERE user_id = #{id}
+    </delete>
+
+    <!--分配完成查询 -->
+    <select id="selectRoleUser" resultMap="userResult">
+        select user_id,login_ip,login_name,no, name, email, phone, mobile, user_type,remarks, login_flag,
+        photo,office_id from sys_user
+        where user_id in (select user_id from sys_user_role where role_id=#{roleId})
+        <if test="officeId!=null and officeId != ''">
+            and office_id=#{officeId}
+        </if>
+        and del_flag = 0
+        ORDER BY update_date desc
+    </select>
+
+    <select id="selectUserByRole" resultType="com.hcf.nszh.provider.system.api.vo.UserByRoleVo">
+        select a.user_id,a.login_name, a.name, a.email, a.phone, a.remarks, a.login_flag,
+        a.photo,a.office_id,o.name as officeName,
+        case when a.login_name = 'admin'  then 1 else 0 end as admin
+        from sys_user a left join  sys_office  o on a.office_id = o.id
+        where user_id in (select user_id from sys_user_role where role_id=#{roleId})
+        <if test="officeId!=null and officeId !=''">
+            and office_id=#{officeId}
+        </if>
+        and a.del_flag = 0 and o.del_flag = 0
+        ORDER BY a.update_date desc
+    </select>
+
+    <select id="selectUserOfNoRole" resultType="com.hcf.nszh.provider.system.api.vo.UserBaseVo">
+        select a.user_id,a.login_name, a.name from sys_user a
+        where user_id not in (select user_id from sys_user_role where role_id=#{roleId})
+        and a.del_flag = 0
+        ORDER BY a.update_date desc
+    </select>
+
+    <select id="listUser" resultType="com.hcf.nszh.provider.system.api.vo.UserPageVo">
+        SELECT
+        a.user_id,
+        a.office_id AS "office.id",
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE
+        a.del_flag=0
+        <if test="userIds != null and userIds.size>0">
+            AND a.user_id NOT IN
+            <foreach collection="userIds" open="(" separator="," close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectByIds" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        a.user_id,
+        a.office_id AS "office.id",
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE a.user_id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </select>
+
+    <select id="getUserByNameLike" parameterType="java.lang.String"
+            resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        a.user_id,
+        a.office_id AS "office.id",
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE a.name LIKE CONCAT('%',#{userName},'%')
+    </select>
+
+    <select id="queryUserPage" resultType="com.hcf.nszh.provider.system.api.vo.UserPageVo">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE del_flag=0
+        <if test="queryUserPageDto.userName !=null and queryUserPageDto.userName !=''">
+            AND (a.name LIKE CONCAT(CONCAT('%','${queryUserPageDto.userName}'),'%') or a.login_name LIKE CONCAT(CONCAT('%','${queryUserPageDto.userName}'),'%') )
+        </if>
+        <if test="queryUserPageDto.officeId !=null and queryUserPageDto.officeId !=''">
+            AND a.office_id =  #{queryUserPageDto.officeId}
+        </if>
+        order by a.create_date desc
+    </select>
+
+    <select id="listUserRole" resultType="com.hcf.nszh.provider.system.api.vo.UserPageVo">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        ORDER BY a.create_date DESC
+        WHERE del_flag=0
+        AND a.user_id IN
+        <if test="userIds != null and userIds.size>0">
+            <foreach collection="userIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getUserPageVOByUserIds" resultType="com.hcf.nszh.provider.system.api.vo.UserPageVo">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE del_flag=0
+        <if test="userIds != null and userIds.size > 0">
+            AND a.user_id IN
+            <foreach collection="userIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="getUserById" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE del_flag='0'
+        AND
+        user_id=#{userId}
+    </select>
+
+    <select id="listAllUser" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE a.del_flag='0'
+    </select>
+
+    <select id="listUserByOfficeId" resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT
+        a.user_id,
+        a.office_id,
+        a.login_name,
+        a.password,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        a.user_type,
+        a.login_ip,
+        a.login_date,
+        a.remarks,
+        a.login_flag,
+        a.photo
+        FROM sys_user a
+        WHERE a.del_flag='0'
+        AND a.office_id=#{officeId}
+    </select>
+    <select id="pageUser" resultType="com.hcf.nszh.provider.system.api.vo.AssignedUserVO">
+        SELECT
+        a.user_id,
+        a.login_name,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile,
+        b.role_id
+        FROM sys_user a,sys_user_role b
+        WHERE a.user_id=b.user_id AND a.del_flag='0' AND role_id=#{roleId}
+    </select>
+
+
+    <select id="getUserByOfficeIds"  resultType="com.hcf.nszh.provider.system.entity.UserEntity">
+        SELECT   a.user_id,
+        a.login_name,
+        a.no,
+        a.name,
+        a.email,
+        a.phone,
+        a.mobile from sys_user a
+        LEFT JOIN sys_office d on a.office_id = d.id
+        where   a.del_flag = 0   and d.del_flag = 0
+        <if test="officeIds != null and officeIds.size > 0">
+            and a.office_id in
+            <foreach collection="officeIds" open="(" close=")" item="item" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="search != null and search != ''">
+            and a.name like concat('%',#{search},'%')
+        </if>
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hcf.nszh.provider.system.entity.UserEntity">
+        update sys_user
+        <set>
+            <if test="companyId != null">
+                company_id = #{companyId,jdbcType=VARCHAR},
+            </if>
+            <if test="officeId != null">
+                office_id = #{officeId,jdbcType=VARCHAR},
+            </if>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="no != null">
+                no = #{no,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=CHAR},
+            </if>
+            <if test="photo != null">
+                photo = #{photo,jdbcType=VARCHAR},
+            </if>
+            <if test="loginIp != null">
+                login_ip = #{loginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="loginDate != null">
+                login_date = #{loginDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="loginFlag != null">
+                login_flag = #{loginFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                create_by = #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_date = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null">
+                update_by = #{updateUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_date = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=CHAR},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <update id="saveSkin"  parameterType="java.lang.String">
+        update sys_user set skin = #{skin,jdbcType=VARCHAR} ,sys_skin = #{sysSkin,jdbcType=VARCHAR} where user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

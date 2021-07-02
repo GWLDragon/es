@@ -1,0 +1,93 @@
+2021-06-29 15:36:54.093 - INFO 32340 [           main] c.h.n.gateway.GateWayServiceApplication  : The following profiles are active: dev
+2021-06-29 15:36:55.236 - INFO 32340 [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=fc1707be-f0e6-3545-8c5f-dcab50088952
+2021-06-29 15:36:55.335 - INFO 32340 [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-06-29 15:36:55.701 - INFO 32340 [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactiveLoadBalancerConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactiveLoadBalancerConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-06-29 15:36:55.703 - INFO 32340 [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-06-29 15:36:55.810 - INFO 32340 [           main] c.h.n.g.f.CustomGatewayFilterFactory     : 加载 自定义拦截器 [Custom]...
+2021-06-29 15:36:55.811 - INFO 32340 [           main] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static fields: private static java.lang.String[] com.hcf.nszh.gateway.filter.CustomGatewayFilterFactory.refererDomains
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [After]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Before]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Between]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Cookie]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Header]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Host]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Method]
+2021-06-29 15:36:58.197 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Path]
+2021-06-29 15:36:58.198 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Query]
+2021-06-29 15:36:58.198 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [ReadBodyPredicateFactory]
+2021-06-29 15:36:58.198 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [RemoteAddr]
+2021-06-29 15:36:58.198 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [Weight]
+2021-06-29 15:36:58.198 - INFO 32340 [           main] o.s.c.g.r.RouteDefinitionRouteLocator    : Loaded RoutePredicateFactory [CloudFoundryRouteService]
+2021-06-29 15:36:58.235 - WARN 32340 [           main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2021-06-29 15:36:58.235 - INFO 32340 [           main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2021-06-29 15:36:58.242 - WARN 32340 [           main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2021-06-29 15:36:58.242 - INFO 32340 [           main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2021-06-29 15:36:58.267 - INFO 32340 [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses Jersey
+2021-06-29 15:37:05.622 - WARN 32340 [           main] ockingLoadBalancerClientRibbonWarnLogger : You already have RibbonLoadBalancerClient on your classpath. It will be used by default. As Spring Cloud Ribbon is in maintenance mode. We recommend switching to BlockingLoadBalancerClient instead. In order to use it, set the value of `spring.cloud.loadbalancer.ribbon.enabled` to `false` or remove spring-cloud-starter-netflix-ribbon from your project.
+2021-06-29 15:37:05.633 - WARN 32340 [           main] eactorLoadBalancerClientRibbonWarnLogger : You have RibbonLoadBalancerClient on your classpath. LoadBalancerExchangeFilterFunction that uses it under the hood will be used by default. Spring Cloud Ribbon is now in maintenance mode, so we suggest switching to ReactorLoadBalancerExchangeFilterFunction instead. In order to use it, set the value of `spring.cloud.loadbalancer.ribbon.enabled` to `false` or remove spring-cloud-starter-netflix-ribbon from your project.
+2021-06-29 15:37:05.675 - INFO 32340 [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2021-06-29 15:37:05.716 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2021-06-29 15:37:07.344 - INFO 32340 [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2021-06-29 15:37:07.344 - INFO 32340 [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2021-06-29 15:37:07.497 - INFO 32340 [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2021-06-29 15:37:07.497 - INFO 32340 [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2021-06-29 15:37:07.776 - INFO 32340 [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2021-06-29 15:37:08.926 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2021-06-29 15:37:08.926 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2021-06-29 15:37:08.926 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2021-06-29 15:37:08.926 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2021-06-29 15:37:08.927 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2021-06-29 15:37:08.927 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2021-06-29 15:37:08.927 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2021-06-29 15:37:09.192 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2021-06-29 15:37:09.196 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Not registering with Eureka server per configuration
+2021-06-29 15:37:09.202 - INFO 32340 [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1624952229200 with initial instances count: 1
+2021-06-29 15:37:09.207 - INFO 32340 [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application GATEWAY-SERVICE with eureka with status UP
+2021-06-29 15:37:10.812 - INFO 32340 [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port(s): 9011
+2021-06-29 15:37:10.813 - INFO 32340 [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 9011
+2021-06-29 15:37:14.434 - INFO 32340 [           main] c.h.n.gateway.GateWayServiceApplication  : Started GateWayServiceApplication in 25.801 seconds (JVM running for 30.257)
+2021-06-29 15:37:27.242 - INFO 32340 [ctor-http-nio-2] c.netflix.config.ChainedDynamicProperty  : Flipping property: system-web.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2021-06-29 15:37:27.283 - INFO 32340 [ctor-http-nio-2] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-system-web
+2021-06-29 15:37:27.284 - INFO 32340 [ctor-http-nio-2] c.netflix.loadbalancer.BaseLoadBalancer  : Client: system-web instantiated a LoadBalancer: DynamicServerListLoadBalancer:{NFLoadBalancer:name=system-web,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:null
+2021-06-29 15:37:27.294 - INFO 32340 [ctor-http-nio-2] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater
+2021-06-29 15:37:27.297 - INFO 32340 [ctor-http-nio-2] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client system-web initialized: DynamicServerListLoadBalancer:{NFLoadBalancer:name=system-web,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@ae2b0c7
+2021-06-29 15:37:29.108 - INFO 32340 [ctor-http-nio-2] c.netflix.config.ChainedDynamicProperty  : Flipping property: statistics.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2021-06-29 15:37:29.110 - INFO 32340 [ctor-http-nio-2] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-statistics
+2021-06-29 15:37:29.110 - INFO 32340 [ctor-http-nio-2] c.netflix.loadbalancer.BaseLoadBalancer  : Client: statistics instantiated a LoadBalancer: DynamicServerListLoadBalancer:{NFLoadBalancer:name=statistics,current list of Servers=[],Load balancer stats=Zone stats: {},Server stats: []}ServerList:null
+2021-06-29 15:37:29.111 - INFO 32340 [ctor-http-nio-2] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater
+2021-06-29 15:37:29.135 - INFO 32340 [ctor-http-nio-2] c.netflix.config.ChainedDynamicProperty  : Flipping property: statistics.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2021-06-29 15:37:29.136 - INFO 32340 [ctor-http-nio-2] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client statistics initialized: DynamicServerListLoadBalancer:{NFLoadBalancer:name=statistics,current list of Servers=[192.168.137.1:8086],Load balancer stats=Zone stats: {defaultzone=[Zone:defaultzone;	Instance count:1;	Active connections count: 0;	Circuit breaker tripped count: 0;	Active connections per server: 0.0;]
+},Server stats: [[Server:192.168.137.1:8086;	Zone:defaultZone;	Total Requests:0;	Successive connection failure:0;	Total blackout seconds:0;	Last connection made:Thu Jan 01 08:00:00 CST 1970;	First connection made: Thu Jan 01 08:00:00 CST 1970;	Active Connections:0;	total failure count in last (1000) msecs:0;	average resp time:0.0;	90 percentile resp time:0.0;	95 percentile resp time:0.0;	min resp time:0.0;	max resp time:0.0;	stddev resp time:0.0]
+]}ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@1645b5ed
+2021-06-29 15:37:29.148 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:37:29.148 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:37:29.148 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:37:29.148 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:37:30.114 - INFO 32340 [erListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: statistics.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647
+2021-06-29 15:37:39.724 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:37:39.724 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: http://localhost:9011
+2021-06-29 15:37:39.724 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:37:39.724 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:38:04.743 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:38:04.744 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:38:04.745 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:38:04.745 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:40:13.067 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:40:13.068 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:40:13.068 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:40:13.068 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:42:08.936 - INFO 32340 [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2021-06-29 15:42:35.305 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:42:35.306 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:42:35.306 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:42:35.306 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:45:47.542 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:45:47.543 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:45:47.543 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:45:47.543 - INFO 32340 [ctor-http-nio-2] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:47:08.938 - INFO 32340 [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2021-06-29 15:52:06.172 - INFO 32340 [ctor-http-nio-5] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截----------
+2021-06-29 15:52:06.172 - INFO 32340 [ctor-http-nio-5] com.hcf.nszh.gateway.filter.DemoFilter   : ------------从request中获取到的referer：http://localhost:9011/swagger-ui.html--------origin: null
+2021-06-29 15:52:06.172 - INFO 32340 [ctor-http-nio-5] com.hcf.nszh.gateway.filter.DemoFilter   : ------------开始进入请求地址拦截-------host: localhost------refererDomains: [Ljava.lang.String;@59829920
+2021-06-29 15:52:06.172 - INFO 32340 [ctor-http-nio-5] com.hcf.nszh.gateway.filter.DemoFilter   : ---------------------能比配----------------------------
+2021-06-29 15:52:08.939 - INFO 32340 [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
