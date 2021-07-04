@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer/consumer.iml" filepath="$PROJECT_DIR$/consumer/consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/es.iml" filepath="$PROJECT_DIR$/es.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka-service.iml" filepath="$PROJECT_DIR$/eureka-service/eureka-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway-service/gateway-service.iml" filepath="$PROJECT_DIR$/gateway-service/gateway-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider/provider.iml" filepath="$PROJECT_DIR$/provider/provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider-api/provider-api.iml" filepath="$PROJECT_DIR$/provider-api/provider-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/security-api/security-api.iml" filepath="$PROJECT_DIR$/security-api/security-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider/statistics/statistics.iml" filepath="$PROJECT_DIR$/provider/statistics/statistics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider/system-service/system-service.iml" filepath="$PROJECT_DIR$/provider/system-service/system-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider-api/system-service-api/system-service-api.iml" filepath="$PROJECT_DIR$/provider-api/system-service-api/system-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer/system-web/system-web.iml" filepath="$PROJECT_DIR$/consumer/system-web/system-web.iml" />
+    </modules>
+  </component>
+</project>
