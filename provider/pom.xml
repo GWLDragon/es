@@ -14,6 +14,7 @@
     <modules>
         <module>system-service</module>
         <module>statistics</module>
+        <module>datasource</module>
     </modules>
 
     <!--单独传递不影响其他同级子模块-->
