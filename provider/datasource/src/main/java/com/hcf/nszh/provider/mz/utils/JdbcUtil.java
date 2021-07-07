@@ -96,7 +96,6 @@ public class JdbcUtil {
                                     List<Object> params) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
 
         try {
             connection = JdbcConfig.getConnection(jdbcEntity);
@@ -108,7 +107,7 @@ public class JdbcUtil {
             e.printStackTrace();
             return 0;
         } finally {
-            close(resultSet, preparedStatement, connection);
+            close(null, preparedStatement, connection);
         }
     }
 

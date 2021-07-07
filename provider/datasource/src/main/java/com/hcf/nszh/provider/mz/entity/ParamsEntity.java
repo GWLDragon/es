@@ -1,7 +1,5 @@
 package com.hcf.nszh.provider.mz.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,22 +15,33 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "SqlEntity", description = "参数实体")
+
 public class ParamsEntity {
 
-    @ApiModelProperty("序号")
+
+    /**
+     * 序号
+     */
     private Long id;
 
-    @ApiModelProperty("sql序号")
+    /**
+     * sql序号
+     */
     private Long sqlId;
 
-    @ApiModelProperty("参数名称")
+    /**
+     * 参数名称
+     */
     private String name;
 
-    @ApiModelProperty("参数值")
+    /**
+     * 参数值
+     */
     private Object value;
 
-    @ApiModelProperty("参数类型")
+    /**
+     * 参数类型
+     */
     private String type;
 
 }

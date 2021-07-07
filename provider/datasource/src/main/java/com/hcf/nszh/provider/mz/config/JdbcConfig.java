@@ -1,7 +1,6 @@
 package com.hcf.nszh.provider.mz.config;
 
 import com.google.common.base.Strings;
-import com.hcf.nszh.common.exception.BusinessException;
 import com.hcf.nszh.provider.mz.entity.JdbcEntity;
 import com.hcf.nszh.provider.mz.enums.JdbcEnum;
 import freemarker.template.utility.ClassUtil;
@@ -34,7 +33,7 @@ public class JdbcConfig {
             String driverClass = JdbcEnum.getDriverClassByType(jdbcEntity.getDriverClassType());
             if (Strings.isNullOrEmpty(driverClass)) {
                 log.error("暂不支持该数据库驱动");
-                throw new BusinessException("暂不支持该数据库驱动，请联系管理员");
+                throw new Exception("暂不支持该数据库驱动，请联系管理员");
             }
             ClassUtil.forName(driverClass);
             Properties info = new Properties() {{
@@ -44,7 +43,7 @@ public class JdbcConfig {
             return DriverManager.getConnection(jdbcEntity.getUrl(), info);
         } catch (Exception e) {
             log.error("获取数据源连接失败", e);
-            throw new BusinessException("数据库连接失败，用户或者密码不正确");
+            return null;
         }
     }
 }

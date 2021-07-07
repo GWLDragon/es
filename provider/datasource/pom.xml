@@ -13,16 +13,6 @@
     <version>1.0</version>
     <dependencies>
         <dependency>
-            <groupId>com.hyzs.nszh</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hyzs.nszh</groupId>
-            <artifactId>security-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
@@ -39,48 +29,6 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-        <!-- swagger -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.swagger2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.swagger.ui.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger.annotations.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
-            <version>${mybaitsplus.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybaitsplus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybaitsplus.version}</version>
-        </dependency>
-        <!--websocket-->
-  <!--      <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>-->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-velocity</artifactId>
             <version>1.4.7.RELEASE</version>
@@ -95,37 +43,19 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>${druid.version}</version>
+            <version>1.1.22</version>
         </dependency>
         <!-- MYSQL 数据库相关依赖 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-        <!-- reids -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-data-redis</artifactId>
-        </dependency>
-        <!-- redis依赖commons-pool 这个依赖一定要添加 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
+            <version>8.0.16</version>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-httpclient</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-support</artifactId>
-            <version>${mybatis-plus-support.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -138,54 +68,29 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.2.12</version>
         </dependency>
         <!--oracle-->
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>${oracle.ojdbc6.version}</version>
+            <version>11.2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-            <version>2.1.2</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+            <version>3.0.3</version>
+            <scope>compile</scope>
         </dependency>
-
-        <!--实现文件上传下载-->
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-            <version>8.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>7.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-client</artifactId>
-            <version>7.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>transport</artifactId>
-            <version>7.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>transport</artifactId>
-            <version>7.6.2</version>
-        </dependency>
-
     </dependencies>
     <dependencyManagement>
         <dependencies>
